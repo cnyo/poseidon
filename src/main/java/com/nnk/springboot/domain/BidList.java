@@ -1,7 +1,6 @@
 package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -30,19 +29,15 @@ public class BidList {
     private String type;
 
     @NotNull(message = "Bid quantity is mandatory")
-    @Digits(integer = 10, fraction = 2, message = "Bid quantity must be a number with up to 10 digits and 2 decimal places")
     private Double bidQuantity;
 
     @NotNull(message = "Ask quantity is mandatory")
-    @Digits(integer = 10, fraction = 2, message = "Ask quantity must be a number with up to 10 digits and 2 decimal places")
     private Double askQuantity;
 
     @NotNull(message = "Date is mandatory")
-    @Digits(integer = 10, fraction = 2, message = "Date must be a number with up to 10 digits and 2 decimal places")
     private Double bid;
 
     @NotNull(message = "Ask is mandatory")
-    @Digits(integer = 10, fraction = 2, message = "Ask must be a number with up to 10 digits and 2 decimal places")
     private Double ask;
 
     @NotBlank(message = "Benchmark is mandatory")
