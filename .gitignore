@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Poseidon ###
+src/test/resources/application-test.properties
