@@ -38,8 +38,20 @@ public class RatingController {
 
     @PostMapping("/rating/validate")
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
-        return "rating/add";
+        if (result.hasErrors()) {
+            return "rating/add";
+        }
+
+        try {
+            ratingService.addRating(rating);
+
+            return "redirect:/rating/list";
+        } catch (Exception e) {
+            // TODO: add an error message
+            // TODO: log exception
+            return "rating/add";
+        }
+
     }
 
     @GetMapping("/rating/update/{id}")
