@@ -34,9 +34,6 @@ public class RatingControllerTest {
     @Test
     @WithMockUser(username = "user")
     public void getAllRating_thenReturnRatingListView() throws Exception {
-//    public void getAllRatings_whenUserIsAuthenticated_thenReturnRatingListView() throws Exception {
-//    public void testGetAllRatingForm() throws Exception {
-//    public void methodName_whenCondition_thenExpectedResult() throws Exception {
         // Arrange
         Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
         rating.setOrderNumber(20);
@@ -51,6 +48,19 @@ public class RatingControllerTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/list"))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void getRatingForm_thenReturnRatingFormView() throws Exception {
+        // Act
+        ResultActions result = mockMvc.perform(get("/rating/add"));
+
+        // Assert
+        result
+                .andExpect(status().isOk())
+                .andExpect(view().name("rating/add"))
                 .andReturn();
     }
 
