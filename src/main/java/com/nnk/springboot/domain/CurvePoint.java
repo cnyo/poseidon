@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * It contains fields that correspond to the columns in the curve point table.
  */
 @Entity
-@Table(name = "curvepoint")
+@Table(name = "curve_point")
 public class CurvePoint {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

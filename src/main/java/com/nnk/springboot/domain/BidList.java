@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * It contains fields that correspond to the columns in the bid list table.
  */
 @Entity
-@Table(name = "bidlist")
+@Table(name = "bid_list")
 public class BidList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
