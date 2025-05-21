@@ -17,8 +17,17 @@ public class CurvePoint {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Curve Id is mandatory")
     private Integer curveId;
+
+    private Timestamp asOfDate;
+
+    @NotNull(message = "Term is mandatory")
+    private Double term;
+
+    @NotNull(message = "Value is mandatory")
+    private Double value;
+
+    private Timestamp creationDate;
 
     public void setId(Integer id) {
         this.id = id;
@@ -75,16 +84,4 @@ public class CurvePoint {
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
-
-    @NotNull(message = "As Of Date is mandatory")
-    private Timestamp asOfDate;
-
-    @NotNull(message = "Term is mandatory")
-    private Double term;
-
-    @NotNull(message = "Value is mandatory")
-    private Double value;
-
-    @NotNull(message = "Creation Date is mandatory")
-    private Timestamp creationDate;
 }
