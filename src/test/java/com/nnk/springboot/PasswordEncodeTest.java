@@ -3,6 +3,7 @@ package com.nnk.springboot;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Created by Khang Nguyen.
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * Time: 11:26 AM
  */
 @SpringBootTest
+@ActiveProfiles("test")
 public class PasswordEncodeTest {
     @Test
     public void testPassword() {
