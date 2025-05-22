@@ -18,7 +18,7 @@ public class BidList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BidListId")
-    private Integer bidListId;
+    private Integer id;
 
     @NotBlank(message = "Account is mandatory")
     @Length(max = 30)
@@ -105,12 +105,12 @@ public class BidList {
         this.bidQuantity = bidQuantity;
     }
 
-    public void setBidListId(Integer id) {
-        this.bidListId = id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Integer getBidListId() {
-        return bidListId;
+    public Integer getId() {
+        return id;
     }
 
     public String getAccount() {

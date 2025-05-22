@@ -1,6 +1,7 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.form.BidListForm;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +12,15 @@ public interface BidListService {
 
     BidList getBidList(Integer id);
 
-    BidList saveBidList(BidList bidList);
+    BidList saveBid(BidList bidList);
 
-    BidList updateBidList(Integer id, BidList bidList);
+    BidList updateBid(Integer id, BidListForm bidListForm);
 
     Boolean deleteBidList(Integer id);
+
+    void deleteBid(Integer bidListId);
+
+    BidList bidFormToBid(BidListForm bidForm);
+
+    BidListForm initBidFormFromBid(BidList bid);
 }
