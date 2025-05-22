@@ -13,7 +13,7 @@ public class Trade {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "TradeId")
-    private Integer tradeId;
+    private Integer Id;
 
     @NotBlank(message = "Account is mandatory")
     @Length(max = 125)
@@ -26,65 +26,65 @@ public class Trade {
     @NotNull(message = "Buy quantity is mandatory")
     private Double buyQuantity;
 
-    @NotNull(message = "Sell quantity is mandatory")
+//    @NotNull(message = "Sell quantity is mandatory")
     private Double sellQuantity;
 
-    @NotNull(message = "Buy price is mandatory")
+//    @NotNull(message = "Buy price is mandatory")
     private Double buyPrice;
 
-    @NotNull(message = "Sell price is mandatory")
+//    @NotNull(message = "Sell price is mandatory")
     private Double sellPrice;
 
-    @NotBlank(message = "Benchmark is mandatory")
+//    @NotBlank(message = "Benchmark is mandatory")
     @Length(max = 125)
     private String benchmark;
 
-    @NotNull(message = "Trade date is mandatory")
+//    @NotNull(message = "Trade date is mandatory")
     private Timestamp tradeDate;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String security;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String status;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String trader;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String book;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String creationName;
 
-    @NotNull(message = "Settle date is mandatory")
+//    @NotNull(message = "Settle date is mandatory")
     private Timestamp creationDate;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String revisionName;
 
-    @NotNull(message = "Settle date is mandatory")
+//    @NotNull(message = "Settle date is mandatory")
     private Timestamp revisionDate;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String dealName;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String dealType;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String sourceListId;
 
-    @NotBlank(message = "Settle date is mandatory")
+//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
     private String side;
 
@@ -95,12 +95,12 @@ public class Trade {
         setType(type);
     }
 
-    public void setTradeId(Integer id) {
-        this.tradeId = id;
+    public void setId(Integer id) {
+        this.Id = id;
     }
 
-    public Integer getTradeId() {
-        return tradeId;
+    public Integer getId() {
+        return Id;
     }
 
     public String getAccount() {
