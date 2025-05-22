@@ -30,16 +30,16 @@ public class Rating {
     private String fitchRating;
 
     @NotNull(message = "Order Number is mandatory")
-    private Integer orderNumber;
+    @Column(name = "orderNumber")
+    private Integer order;
 
     public Rating() {}
 
-    // "Moodys Rating", "Sand PRating", "Fitch Rating", 10
     public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
         setMoodysRating(moodysRating);
         setSandPRating(sandPRating);
         setFitchRating(fitchRating);
-        setOrderNumber(orderNumber);
+        setOrder(orderNumber);
     }
 
     public void setId(Integer id) {
@@ -74,11 +74,11 @@ public class Rating {
         this.fitchRating = fitchRating;
     }
 
-    public Integer getOrderNumber() {
-        return orderNumber;
+    public Integer getOrder() {
+        return order;
     }
 
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setOrder(Integer orderNumber) {
+        this.order = orderNumber;
     }
 }

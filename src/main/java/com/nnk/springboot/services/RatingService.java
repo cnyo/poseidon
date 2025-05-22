@@ -23,4 +23,10 @@ public interface RatingService {
      * @throws IllegalArgumentException if the rating is null or invalid
      */
     Rating addRating(Rating rating) throws IllegalArgumentException;
+
+    Rating getRating(Integer id);
+
+    Rating updateRating(Integer id, Rating rating);
+
+    void deleteRating(Integer id);
 }

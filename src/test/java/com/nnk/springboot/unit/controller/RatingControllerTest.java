@@ -2,7 +2,8 @@ package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.RatingController;
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.services.RatingService;
+import com.nnk.springboot.services.RatingServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,10 +16,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,17 +27,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RatingControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockitoBean
-    RatingService ratingService;
+    private RatingServiceImpl ratingService;
+
+    static Rating rating;
+
+    @BeforeEach
+    public void setUp() {
+        rating = new Rating();
+        rating.setId(1);
+        rating.setMoodysRating("Moodys");
+        rating.setSandPRating("S&P");
+        rating.setFitchRating("Fitch");
+        rating.setOrder(10);
+    }
 
     @Test
     @WithMockUser(username = "user")
-    public void getAllRating_thenReturnRatingListView() throws Exception {
+    public void getAllTrade_thenReturnTradeListView() throws Exception {
         // Arrange
-        Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-        rating.setOrderNumber(20);
         List<Rating> ratings = List.of(rating);
 
         when(ratingService.getAllRating()).thenReturn(ratings);
@@ -45,50 +56,93 @@ public class RatingControllerTest {
         ResultActions result = mockMvc.perform(get("/rating/list"));
 
         // Assert
-        result
+        result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/list"))
+                .andExpect(model().attribute("ratings", ratings))
                 .andReturn();
     }
 
     @Test
     @WithMockUser(username = "user")
-    public void getRatingForm_thenReturnRatingFormView() throws Exception {
+    public void getAddRatingForm_thenReturnRatingFormView() throws Exception {
         // Act
         ResultActions result = mockMvc.perform(get("/rating/add"));
 
         // Assert
-        result
+        result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/add"))
-                .andReturn();
+                .andExpect(model().attributeExists("rating"));
     }
 
     @Test
     @WithMockUser(username = "user")
-    public void postRating_thenRedirectToList() throws Exception {
+    public void postRating_thenRedirectToRatingListView() throws Exception {
         // Arrange
-        Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-
         when(ratingService.addRating(any())).thenReturn(rating);
 
         // Act
         ResultActions result = mockMvc.perform(post("/rating/validate")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("orderNumber", "10")
-                        .param("moodysRating", "Moodys Rating")
-                        .param("sandPRating", "Sand PRating")
-                        .param("fitchRating", "Fitch Rating")
-                        .param("version", "1"));
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("moodysRating", "Moodys")
+                .param("sandPRating", "S&P")
+                .param("fitchRating", "Fitch")
+                .param("order", "10"));
 
         // Assert
-        result
-                .andDo(print())
+        result.andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/rating/list"))
-                .andExpect(redirectedUrl("/rating/list"))
-                .andReturn();
+                .andExpect(redirectedUrl("/rating/list"));
     }
 
+    @Test
+    @WithMockUser(username = "user")
+    public void getRatingById_thenShowUpdateFormView() throws Exception {
+        // Arrange
+        when(ratingService.getRating(any())).thenReturn(rating);
+
+        // Act
+        ResultActions result = mockMvc.perform(get("/rating/update/{id}", rating.getId()));
+
+        // Assert
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("rating/update"))
+                .andExpect(model().attribute("rating", rating));
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void updateRating_thenRedirectToRatingListView() throws Exception {
+        // Arrange
+        when(ratingService.updateRating(anyInt(), any())).thenReturn(rating);
+
+        // Act
+        ResultActions result = mockMvc.perform(post("/rating/update/{id}", rating.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("moodysRating", "Moodys")
+                .param("sandPRating", "S&P")
+                .param("fitchRating", "Fitch")
+                .param("order", "10"));
+
+        // Assert
+        result.andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/rating/list"));
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void deleteRating_thenRedirectRatingListView() throws Exception {
+        // Act
+        ResultActions result = mockMvc.perform(get("/rating/delete/{id}", rating.getId()));
+
+        // Assert
+        result.andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/rating/list"));
+    }
 }

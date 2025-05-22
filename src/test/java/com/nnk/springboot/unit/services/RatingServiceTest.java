@@ -43,7 +43,7 @@ public class RatingServiceTest {
         Assertions.assertEquals(1, result.size());
         Assertions.assertTrue(result.stream().findFirst().isPresent());
         Assertions.assertNotNull(result.stream().findFirst().get().getId());
-        Assertions.assertEquals(10, result.stream().findFirst().get().getOrderNumber());
+        Assertions.assertEquals(10, result.stream().findFirst().get().getOrder());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class RatingServiceTest {
 
         // Assert
         Assert.assertNotNull(result.getId());
-        Assert.assertTrue(result.getOrderNumber() == 10);
+        Assert.assertTrue(result.getOrder() == 10);
 
         // Update
 //        rating.setOrderNumber(20);

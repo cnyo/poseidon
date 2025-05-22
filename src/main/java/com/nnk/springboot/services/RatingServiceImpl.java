@@ -27,4 +27,19 @@ public class RatingServiceImpl implements RatingService {
 
         return ratingRepository.save(rating);
     }
+
+    @Override
+    public Rating getRating(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Rating updateRating(Integer id, Rating rating) {
+        return null;
+    }
+
+    @Override
+    public void deleteRating(Integer id) {
+
+    }
 }
