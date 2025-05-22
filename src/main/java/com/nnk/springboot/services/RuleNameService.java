@@ -11,7 +11,7 @@ public interface RuleNameService {
 
     RuleName getRuleName(Integer id);
 
-    RuleName saveRuleName(RuleName ruleName);
+    RuleName addRuleName(RuleName ruleName);
 
     RuleName updateRuleName(Integer id, RuleName ruleName);
 

@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Length;
 @Table(name = "rulename")
 public class RuleName {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "Name is mandatory")
@@ -32,13 +32,24 @@ public class RuleName {
     @Length(max = 512)
     private String template;
 
-    public RuleName() {}
-    public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart) {
+    @NotBlank(message = "SqlStr is mandatory")
+    @Length(max = 125)
+    @Column(name = "sql_str")
+    private String sql;
+
+    @NotBlank(message = "SqlPart is mandatory")
+    @Length(max = 125)
+    private String sqlPart;
+
+    public RuleName() {
+    }
+
+    public RuleName(String name, String description, String json, String template, String sql, String sqlPart) {
         setName(name);
         setDescription(description);
         setJson(json);
         setTemplate(template);
-        setSqlStr(sqlStr);
+        setSql(sql);
         setSqlPart(sqlPart);
     }
 
@@ -82,12 +93,12 @@ public class RuleName {
         this.template = template;
     }
 
-    public String getSqlStr() {
-        return sqlStr;
+    public String getSql() {
+        return sql;
     }
 
-    public void setSqlStr(String sqlStr) {
-        this.sqlStr = sqlStr;
+    public void setSql(String sqlStr) {
+        this.sql = sqlStr;
     }
 
     public String getSqlPart() {
@@ -97,12 +108,4 @@ public class RuleName {
     public void setSqlPart(String sqlPart) {
         this.sqlPart = sqlPart;
     }
-
-    @NotBlank(message = "SqlStr is mandatory")
-    @Length(max = 125)
-    private String sqlStr;
-
-    @NotBlank(message = "SqlPart is mandatory")
-    @Length(max = 125)
-    private String sqlPart;
 }
