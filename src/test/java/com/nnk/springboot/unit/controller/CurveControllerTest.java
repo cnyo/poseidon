@@ -82,7 +82,6 @@ public class CurveControllerTest {
     @WithMockUser(username = "user")
     public void postCurvePoint_thenRedirectToCurvePointListView() throws Exception {
         // Arrange
-        CurvePoint curvePoint = new CurvePoint(10, 10d, 30d);
         curvePoint.setCreationDate(new Timestamp(System.currentTimeMillis()));
         curvePoint.setAsOfDate(new Timestamp(System.currentTimeMillis()));
         when(curvePointService.saveCurvePoint(any())).thenReturn(curvePoint);
