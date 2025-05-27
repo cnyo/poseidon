@@ -144,9 +144,6 @@ public class RuleNameControllerTest {
     @Test
     @WithMockUser(username = "user")
     public void deleteRuleName_thenRedirectRuleNameListView() throws Exception {
-        // Arrange
-        when(ruleNameService.deleteRuleName(any())).thenReturn(true);
-
         // Act
         ResultActions result = mockMvc.perform(get("/ruleName/delete/{id}", ruleName.getId())
                 .with(csrf())

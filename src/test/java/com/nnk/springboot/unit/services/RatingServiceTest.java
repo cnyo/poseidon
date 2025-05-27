@@ -113,7 +113,7 @@ public class RatingServiceTest {
     }
 
     @Test
-    public void deleteRating() throws IllegalArgumentException {
+    public void deleteRating_shouldCallDeleteById() throws IllegalArgumentException {
         // Act
         ratingService.deleteRating(rating.getId());
 
