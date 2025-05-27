@@ -15,5 +15,7 @@ public interface TradeService {
 
     Trade updateTrade(Integer id, Trade trade);
 
-    Boolean deleteTrade(Integer id);
+    void deleteTrade(Integer id);
+
+    Trade addTrade(Trade trade) throws IllegalArgumentException;
 }
