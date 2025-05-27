@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" xmlns="https://logging.apache.org/xml/ns"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="
+                   https://logging.apache.org/xml/ns
+                   https://logging.apache.org/xml/ns/log4j-config-2.xsd">
+    <Appenders>
+        <Console name="CONSOLE">
+            <PatternLayout disableAnsi="false"
+                           pattern="%d{DEFAULT} [%t] %highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=blue} - %msg%n"/>
+        </Console>
+        <File name="ErrorFileAppender" fileName="logs/poseidon/error.log">
+            <PatternLayout pattern="%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </File>
+        <File name="MAIN" fileName="logs/poseidon/main.log">
+            <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="payMyBuddy" fileName="logs/poseidon/poseidon.log">
+            <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="ErrorFileAppender"/>
+            <AppenderRef ref="MAIN"/>
+        </Root>
+        <Logger name="com.yoann.poseidon" level="INFO" additivity="true">
+            <AppenderRef ref="payMyBuddy"/>
+        </Logger>
+    </Loggers>
+</Configuration>
