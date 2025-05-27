@@ -30,16 +30,37 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating getRating(Integer id) {
-        return null;
+        if (id == null) {
+            throw new IllegalArgumentException("Rating ID cannot be null");
+        }
+
+        return ratingRepository.findById(id).orElse(null);
     }
 
     @Override
     public Rating updateRating(Integer id, Rating rating) {
+        if (id == null || rating == null) {
+            throw new IllegalArgumentException("Rating ID and Rating cannot be null");
+        }
+
+        Rating existingRating = ratingRepository.findById(id).orElse(null);
+
+        if (existingRating != null) {
+            existingRating.setMoodysRating(rating.getMoodysRating());
+            existingRating.setSandPRating(rating.getSandPRating());
+            existingRating.setFitchRating(rating.getFitchRating());
+            existingRating.setOrder(rating.getOrder());
+
+            Rating result =  ratingRepository.save(existingRating);
+
+            return result;
+        }
+
         return null;
     }
 
     @Override
     public void deleteRating(Integer id) {
-
+        ratingRepository.deleteById(id);
     }
 }

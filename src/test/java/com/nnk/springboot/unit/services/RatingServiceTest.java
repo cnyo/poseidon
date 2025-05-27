@@ -5,6 +5,7 @@ import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,11 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RatingServiceTest {
@@ -27,11 +30,17 @@ public class RatingServiceTest {
     @InjectMocks
     private RatingServiceImpl ratingService;
 
+    private Rating rating;
+
+    @BeforeEach
+    public void setUp() {
+        rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+        rating.setId(20);
+    }
+
     @Test
     public void getAllRating_mustReturnRatingList() throws IllegalArgumentException {
         // Arrange
-        Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-        rating.setId(20);
         List<Rating> ratings = List.of(rating);
 
         when(ratingRepository.findAll()).thenReturn(ratings);
@@ -49,7 +58,6 @@ public class RatingServiceTest {
     @Test
     public void saveRating_mustReturnRating() throws IllegalArgumentException {
         // Arrange
-        Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
         Rating insertedRating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
         insertedRating.setId(1);
 
@@ -61,21 +69,6 @@ public class RatingServiceTest {
         // Assert
         Assert.assertNotNull(result.getId());
         Assert.assertTrue(result.getOrder() == 10);
-
-        // Update
-//        rating.setOrderNumber(20);
-//        rating = ratingRepository.save(rating);
-//        Assert.assertTrue(rating.getOrderNumber() == 20);
-
-        // Find
-//        List<Rating> listResult = ratingRepository.findAll();
-//        Assert.assertTrue(listResult.size() > 0);
-
-        // Delete
-//        Integer id = rating.getId();
-//        ratingRepository.delete(rating);
-//        Optional<Rating> ratingList = ratingRepository.findById(id);
-//        Assert.assertFalse(ratingList.isPresent());
     }
 
     @Test
@@ -87,5 +80,44 @@ public class RatingServiceTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void getRating_mustReturnRating() throws IllegalArgumentException {
+        // Arrange
+        when(ratingRepository.findById(anyInt())).thenReturn(Optional.ofNullable(rating));
+
+        // Act
+        Rating result = ratingService.getRating(10);
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertInstanceOf(Rating.class, result);
+        Assertions.assertEquals(10, result.getOrder());
+    }
+
+    @Test
+    public void updateRating_mustReturnRating() throws IllegalArgumentException {
+        // Arrange
+        when(ratingRepository.findById(anyInt())).thenReturn(Optional.ofNullable(rating));
+        rating.setOrder(30);
+        when(ratingRepository.save(any())).thenReturn(rating);
+
+        // Act
+        Rating result = ratingService.updateRating(10, rating);
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertInstanceOf(Rating.class, result);
+        Assert.assertTrue(rating.getOrder() == 30);
+    }
+
+    @Test
+    public void deleteRating() throws IllegalArgumentException {
+        // Act
+        ratingService.deleteRating(rating.getId());
+
+        // Assert
+        verify(ratingRepository, times(1)).deleteById(rating.getId());
     }
 }
