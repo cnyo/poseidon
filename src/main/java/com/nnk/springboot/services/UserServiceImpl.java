@@ -1,34 +1,45 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.User;
+import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    UserRepository userRepository;
+
     @Override
-    public List<User> getAllUser() {
+    public List<DbUser> getAllUser() {
         return List.of();
     }
 
     @Override
-    public User getUser(Integer id) {
+    public DbUser getUser(Integer id) {
         return null;
     }
 
     @Override
-    public User saveUser(User user) {
+    public DbUser saveUser(DbUser user) {
         return null;
     }
 
     @Override
-    public User updateUser(Integer id, User user) {
+    public DbUser updateUser(Integer id, DbUser user) {
         return null;
     }
 
     @Override
     public Boolean deleteUser(Integer id) {
         return null;
+    }
+
+    @Override
+    public DbUser findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

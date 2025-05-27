@@ -1,7 +1,7 @@
 package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.UserController;
-import com.nnk.springboot.domain.User;
+import com.nnk.springboot.domain.DbUser;
 import com.nnk.springboot.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,11 +33,11 @@ public class UserControllerTest {
     @MockitoBean
     private UserServiceImpl userService;
 
-    static User user;
+    static DbUser user;
 
     @BeforeEach
     public void setUp() {
-        user = new User();
+        user = new DbUser();
         user.setId(1);
     }
 
@@ -45,7 +45,7 @@ public class UserControllerTest {
     @WithMockUser(username = "user")
     public void getAllUser_thenReturnUserListView() throws Exception {
         // Arrange
-        List<User> users = List.of(user);
+        List<DbUser> users = List.of(user);
 
         when(userService.getAllUser()).thenReturn(users);
 

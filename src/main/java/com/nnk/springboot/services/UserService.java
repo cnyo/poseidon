@@ -1,19 +1,21 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.User;
+import com.nnk.springboot.domain.DbUser;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface UserService {
-    List<User> getAllUser();
+    List<DbUser> getAllUser();
 
-    User getUser(Integer id);
+    DbUser getUser(Integer id);
 
-    User saveUser(User user);
+    DbUser saveUser(DbUser user);
 
-    User updateUser(Integer id, User user);
+    DbUser updateUser(Integer id, DbUser user);
 
     Boolean deleteUser(Integer id);
+
+    DbUser findByUsername(String username);
 }
