@@ -140,9 +140,6 @@ public class CurveControllerTest {
     @Test
     @WithMockUser(username = "user")
     public void deleteCurvePoint_thenRedirectCurvePointListView() throws Exception {
-        // Arrange
-        when(curvePointService.deleteCurvePoint(any())).thenReturn(true);
-
         // Act
         ResultActions result = mockMvc.perform(delete("/curvePoint/delete/{id}", curvePoint.getId())
                 .with(csrf())

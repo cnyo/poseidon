@@ -15,5 +15,7 @@ public interface CurvePointService {
 
     CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint);
 
-    Boolean deleteCurvePoint(Integer id);
+    void deleteCurvePoint(Integer id);
+
+    CurvePoint addCurvePoint(CurvePoint curvePoint) throws IllegalArgumentException;
 }
