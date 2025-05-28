@@ -4,6 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
+/**
+ * Form class for BidList, used to capture user input for creating or updating a BidList.
+ * It includes validation annotations to ensure that the required fields are provided.
+ */
 public class BidListForm {
     @NotBlank(message = "Account is mandatory")
     @Length(max = 30)

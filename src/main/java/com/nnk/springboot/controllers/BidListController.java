@@ -47,7 +47,7 @@ public class BidListController {
 
         try {
             BidList bid = bidListService.bidFormToBid(bidForm);
-            bidListService.saveBid(bid);
+            bidListService.addBidList(bid);
         } catch (Exception e) {
             result.rejectValue("bidListId", "error.bidListId", "Bid ID already exists");
             return "bidList/add";
@@ -74,7 +74,8 @@ public class BidListController {
         }
 
         try {
-            bidListService.updateBid(id, bidForm);
+            BidList bidList = bidListService.bidFormToBid(bidForm);
+            bidListService.updateBid(id, bidList);
         } catch (Exception e) {
             result.rejectValue("curveId", "error.curveId", "Curve ID already exists");
             return "curvePoint/update";

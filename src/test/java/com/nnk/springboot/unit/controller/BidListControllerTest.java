@@ -98,7 +98,7 @@ public class BidListControllerTest {
     public void postBidList_thenRedirectToBidListListView() throws Exception {
         // Arrange
         when(bidListService.bidFormToBid(any())).thenReturn(bid);
-        when(bidListService.saveBid(any())).thenReturn(bid);
+        when(bidListService.addBidList(any())).thenReturn(bid);
 
         // Act
         ResultActions result = mockMvc.perform(post("/bidList/validate")
@@ -153,6 +153,7 @@ public class BidListControllerTest {
     @WithMockUser(username = "user")
     public void updateBidList_thenRedirectToBidListListView() throws Exception {
         // Arrange
+        when(bidListService.bidFormToBid(any())).thenReturn(bid);
         when(bidListService.updateBid(anyInt(), any())).thenReturn(bid);
 
         // Act
@@ -172,9 +173,6 @@ public class BidListControllerTest {
     @Test
     @WithMockUser(username = "user")
     public void deleteBidList_thenRedirectBidListListView() throws Exception {
-        // Arrange
-        when(bidListService.deleteBidList(any())).thenReturn(true);
-
         // Act
         ResultActions result = mockMvc.perform(get("/bidList/delete/{id}", bid.getId())
                 .with(csrf())
