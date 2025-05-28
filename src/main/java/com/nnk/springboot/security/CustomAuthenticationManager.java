@@ -1,6 +1,7 @@
 package com.nnk.springboot.security;
 
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.security.exception.ApplicationAuthenticationException;
 import com.nnk.springboot.services.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * CustomAuthenticationManager is responsible for authenticating users based on their credentials.
- * It checks the provided username and password against the stored user data.
+ * It implements the AuthenticationManager interface and uses UserService to retrieve user details.
  */
 @Component
 public class CustomAuthenticationManager implements AuthenticationManager {
@@ -33,31 +34,33 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     /**
      * Authenticates the user based on the provided authentication details.
-     * @param authentication
-     * @return
-     * @throws AuthenticationException
+     *
+     * @param authentication the authentication details containing username and password
+     * @return an Authentication object if authentication is successful
+     * @throws AuthenticationException if authentication fails
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        DbUser userEntity = userService.findByUsername(authentication.getName());
+        DbUser dbUser = userService.findByUsername(authentication.getName());
 
-        if (userEntity == null || !passwordEncoder.matches(authentication.getCredentials().toString(), userEntity.getPassword())) {
-            throw new AuthenticationException("Invalid credentials") {};
+        if (dbUser == null || !passwordEncoder.matches(authentication.getCredentials().toString(), dbUser.getPassword())) {
+            throw new ApplicationAuthenticationException("Invalid credentials");
         }
 
         User authUser = new User(
-                userEntity.getUsername(),
-                userEntity.getPassword(),
-               getGrantedAuthority("ADMIN") // Assuming a default role for simplicity
+                dbUser.getUsername(),
+                dbUser.getPassword(),
+                getGrantedAuthority(dbUser.getRole())
         );
 
         return new UsernamePasswordAuthenticationToken(authUser, authentication.getCredentials(), authUser.getAuthorities());
     }
 
     /**
-     * Converts a role string into a list of GrantedAuthority.
-     * @param role
-     * @return
+     * Converts the user's role into a list of GrantedAuthority.
+     *
+     * @param role the role of the user
+     * @return a list of GrantedAuthority
      */
     private List<GrantedAuthority> getGrantedAuthority(String role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
