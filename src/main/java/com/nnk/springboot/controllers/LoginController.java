@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.DbUser;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoginController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     private final Logger log = LogManager.getLogger(LoginController.class);
 
@@ -34,7 +35,7 @@ public class LoginController {
     public ModelAndView getAllUserArticles() {
         log.info("Get all user articles");
         ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
+        mav.addObject("users", userService.getAllUser());
         mav.setViewName("user/list");
         log.info(mav.getViewName());
 
