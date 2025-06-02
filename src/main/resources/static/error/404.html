@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot</title>
+</head>
+<body>
+<h3>Page not found</h3>
+<div>
+    <p>
+        Sorry, the page you are looking for does not exist. <br>
+        Please check the URL or return to the <a href="/" th:href="@{/}">home page</a>. <br>
+        If you believe this is an error, please contact the site administrator.
+    </p>
+</div>
+<div></div>
+
+<p class="error" th:if="${errorMsg != null}" th:text="${errorMsg}">Error 404</p>
+</body>
+</html>
