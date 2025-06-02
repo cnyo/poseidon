@@ -27,7 +27,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private final PasswordEncoder passwordEncoder;
 
-    CustomAuthenticationManager(UserService userService, PasswordEncoder passwordEncoder) {
+    public CustomAuthenticationManager(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
