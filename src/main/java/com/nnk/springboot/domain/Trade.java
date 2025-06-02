@@ -2,7 +2,6 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.sql.Timestamp;
@@ -23,70 +22,52 @@ public class Trade {
     @Length(max = 125)
     private String type;
 
-    @NotNull(message = "Buy quantity is mandatory")
-    private Double buyQuantity;
+    private Double buyQuantity = 0d;
 
-//    @NotNull(message = "Sell quantity is mandatory")
-    private Double sellQuantity;
+    private Double sellQuantity = 0d;
 
-//    @NotNull(message = "Buy price is mandatory")
-    private Double buyPrice;
+    private Double buyPrice = 0d;
 
-//    @NotNull(message = "Sell price is mandatory")
-    private Double sellPrice;
+    private Double sellPrice = 0d;
 
-//    @NotBlank(message = "Benchmark is mandatory")
     @Length(max = 125)
-    private String benchmark;
+    private String benchmark = "";
 
-//    @NotNull(message = "Trade date is mandatory")
-    private Timestamp tradeDate;
+    private Timestamp tradeDate = new Timestamp(System.currentTimeMillis());
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String security;
+    private String security = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String status;
+    private String status = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String trader;
+    private String trader = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String book;
+    private String book = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String creationName;
+    private String creationName = "";
 
-//    @NotNull(message = "Settle date is mandatory")
-    private Timestamp creationDate;
+    private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String revisionName;
+    private String revisionName = "";
 
-//    @NotNull(message = "Settle date is mandatory")
-    private Timestamp revisionDate;
+    private Timestamp revisionDate = new Timestamp(System.currentTimeMillis());
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String dealName;
+    private String dealName = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String dealType;
+    private String dealType = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String sourceListId;
+    private String sourceListId = "";
 
-//    @NotBlank(message = "Settle date is mandatory")
     @Length(max = 125)
-    private String side;
+    private String side = "";
 
     public Trade() {}
 

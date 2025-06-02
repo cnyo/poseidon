@@ -31,71 +31,53 @@ public class BidList {
     @NotNull(message = "Bid quantity is mandatory")
     private Double bidQuantity;
 
-    @NotNull(message = "Ask quantity is mandatory")
-    private Double askQuantity;
+    private Double askQuantity = 0D;
 
-    @NotNull(message = "Date is mandatory")
-    private Double bid;
+    private Double bid = 0D;
 
-    @NotNull(message = "Ask is mandatory")
-    private Double ask;
+    private Double ask = 0D;
 
-    @NotBlank(message = "Benchmark is mandatory")
     @Length(max = 125)
-    private String benchmark;
+    private String benchmark = "";
 
-    @NotNull(message = "Bid list date is mandatory")
-    private Timestamp bidListDate;
+    private Timestamp bidListDate = new Timestamp(System.currentTimeMillis());
 
-    @NotBlank(message = "Commentary is mandatory")
     @Length(max = 125)
-    private String commentary;
+    private String commentary = "";
 
-    @NotBlank(message = "Security is mandatory")
     @Length(max = 125)
-    private String security;
+    private String security = "";
 
-    @NotBlank(message = "Status is mandatory")
     @Length(max = 10)
-    private String status;
+    private String status = "";
 
-    @NotBlank(message = "Trader is mandatory")
     @Length(max = 125)
-    private String trader;
+    private String trader = "";
 
-    @NotBlank(message = "Book is mandatory")
     @Length(max = 125)
-    private String book;
+    private String book = "";
 
-    @NotBlank(message = "Creation name is mandatory")
     @Length(max = 125)
-    private String creationName;
+    private String creationName = "";
 
-    @NotNull(message = "Creation date is mandatory")
-    private Timestamp creationDate;
+    private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
 
-    @NotBlank(message = "Revision name is mandatory")
     @Length(max = 125)
-    private String revisionName;
+    private String revisionName = "";
 
-    @NotNull(message = "Revision date is mandatory")
-    private Timestamp revisionDate;
+    private Timestamp revisionDate = new Timestamp(System.currentTimeMillis());
 
-    @NotBlank(message = "Deal name is mandatory")
     @Length(max = 125)
-    private String dealName;
+    private String dealName = "";
 
-    @NotBlank(message = "Deal type is mandatory")
     @Length(max = 125)
-    private String dealType;
+    private String dealType = "";
 
-    @NotBlank(message = "Source list id is mandatory")
     @Length(max = 125)
-    private String sourceListId;
+    private String sourceListId = "";
 
-    @NotBlank(message = "Side is mandatory")
     @Length(max = 125)
-    private String side;
+    private String side = "";
 
     public BidList() {}
 

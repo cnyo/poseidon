@@ -4,8 +4,6 @@ import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.form.BidListForm;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.BidListServiceImpl;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -50,10 +47,10 @@ public class BidListServiceTest {
         List<BidList> result = bidListService.getAllBidList();
 
         // Assert
-        Assertions.assertEquals(1, result.size());
-        Assertions.assertTrue(result.stream().findFirst().isPresent());
-        Assertions.assertNotNull(result.stream().findFirst().get().getId());
-        Assertions.assertEquals("Account Test", result.stream().findFirst().get().getAccount());
+        assertEquals(1, result.size());
+        assertTrue(result.stream().findFirst().isPresent());
+        assertNotNull(result.stream().findFirst().get().getId());
+        assertEquals("Account Test", result.stream().findFirst().get().getAccount());
     }
 
     @Test
@@ -65,8 +62,8 @@ public class BidListServiceTest {
         BidList result = bidListService.addBidList(bidList);
 
         // Assert
-        Assert.assertNotNull(result.getId());
-        Assert.assertEquals("Account Test", result.getAccount());
+        assertNotNull(result.getId());
+        assertEquals("Account Test", result.getAccount());
     }
 
     @Test
@@ -89,9 +86,9 @@ public class BidListServiceTest {
         BidList result = bidListService.getBidList(10);
 
         // Assert
-        Assertions.assertNotNull(result);
-        Assertions.assertInstanceOf(BidList.class, result);
-        Assertions.assertEquals("Account Test", result.getAccount());
+        assertNotNull(result);
+        assertInstanceOf(BidList.class, result);
+        assertEquals("Account Test", result.getAccount());
     }
 
     @Test
@@ -105,9 +102,9 @@ public class BidListServiceTest {
         BidList result = bidListService.updateBid(10, bidList);
 
         // Assert
-        Assertions.assertNotNull(result);
-        Assertions.assertInstanceOf(BidList.class, result);
-        Assert.assertEquals("Account Test updated", bidList.getAccount());
+        assertNotNull(result);
+        assertInstanceOf(BidList.class, result);
+        assertEquals("Account Test updated", bidList.getAccount());
     }
 
     @Test
@@ -116,9 +113,9 @@ public class BidListServiceTest {
         BidListForm result = bidListService.initBidFormFromBid(bidList);
 
         // Assert
-        Assertions.assertNotNull(result);
-        Assertions.assertInstanceOf(BidListForm.class, result);
-        Assert.assertEquals("Account Test", result.getAccount());
+        assertNotNull(result);
+        assertInstanceOf(BidListForm.class, result);
+        assertEquals("Account Test", result.getAccount());
     }
 
     @Test
@@ -133,9 +130,9 @@ public class BidListServiceTest {
         BidList result = bidListService.bidFormToBid(bidListForm);
 
         // Assert
-        Assertions.assertNotNull(result);
-        Assertions.assertInstanceOf(BidList.class, result);
-        Assert.assertEquals("Account Test", result.getAccount());
+        assertNotNull(result);
+        assertInstanceOf(BidList.class, result);
+        assertEquals("Account Test", result.getAccount());
     }
 
     @Test
