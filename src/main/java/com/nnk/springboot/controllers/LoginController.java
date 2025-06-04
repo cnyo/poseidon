@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.services.LoginService;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("app")
 public class LoginController {
@@ -17,12 +20,17 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoginService loginService;
+
     private final Logger log = LogManager.getLogger(LoginController.class);
 
     @GetMapping("login")
     public ModelAndView login() {
         log.info("Get login page");
         ModelAndView mav = new ModelAndView();
+        Map<String, String> oauth2AuthenticationUrls = loginService.getOauth2AuthenticationUrls();
+        mav.addObject("urls", oauth2AuthenticationUrls);
         mav.addObject("user", new DbUser());
         mav.setViewName("login");
         log.info(mav.getViewName());

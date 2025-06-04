@@ -40,6 +40,12 @@
             </div>
         </form>
     </div>
-</div>
+    <div class="row">
+        <div class="col-12">
+            <h3>Login with :</h3>
+            <p th:each="url : ${urls}">
+                <a href="#" th:href="@{${url.value}}" th:text="${url.key}">Client</a>
+            </p>
+        </div>
 </body>
 </html>

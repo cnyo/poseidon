@@ -28,9 +28,10 @@ public class SecurityConfig {
 
     /**
      * Configures the security filter chain for the application.
+     * It sets up form login, OAuth2 login, CSRF protection, and authorization rules.
      *
      * @param http the HttpSecurity object to configure
-     * @return a SecurityFilterChain instance
+     * @return the configured SecurityFilterChain
      * @throws Exception if an error occurs during configuration
      */
     @Bean
@@ -38,20 +39,20 @@ public class SecurityConfig {
         log.debug("Configuring security filter chain");
 
         http
+//                .securityMatcher((request) -> !request.getRequestURI().startsWith("/api"))
                 .formLogin(form ->
                         form.loginPage("/app/login")
-                        .permitAll())
+                                .permitAll())
+                .oauth2Login(form ->
+                        form.loginPage("/app/login")
+                                .permitAll())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authenticationManager(customAuthenticationManager)
                 .authorizeHttpRequests(matcher -> matcher
-                        .requestMatchers("/", "/app/login", "/app/error", "/user/list", "/css/**", "/js/**")
-                        .permitAll())
-                .authorizeHttpRequests(matcher -> matcher
-                        .requestMatchers( "/admin/home", "/app/admin/**").hasRole("ADMIN"))
-                .authorizeHttpRequests(matcher -> matcher.anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(customize -> customize
-                        .accessDeniedPage("/accessDenied"))
-        ;
+                        .requestMatchers("/app/login", "/app/error", "/user/list", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/admin/home", "/app/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                );
         log.debug("Security FilterChain configured");
 
         return http.build();
