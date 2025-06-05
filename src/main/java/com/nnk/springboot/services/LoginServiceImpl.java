@@ -4,7 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -104,9 +106,6 @@ public class LoginServiceImpl implements LoginService {
             log.debug("ClientRegistrationRepository is iterable");
             // If clientRegistrationRepository is an instance of Iterable<ClientRegistration>
             // we can cast it directly to Iterable<ClientRegistration>
-
-//            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
-
             if (clientRegistrationRepository instanceof InMemoryClientRegistrationRepository repository) {
                 log.debug("ResolvableType {}", type);
                 clientRegistrations = StreamSupport
@@ -128,5 +127,21 @@ public class LoginServiceImpl implements LoginService {
         log.debug("Returning {} oauth2 authentication urls", oauth2AuthenticationUrls.size());
 
         return oauth2AuthenticationUrls;
+    }
+
+    @Override
+    public boolean isAnonymousAuthentication(Authentication authentication) {
+        if (authentication == null) {
+            log.debug("Authentication object is null");
+            return true;
+        }
+
+        if (authentication.isAuthenticated() && authentication instanceof AnonymousAuthenticationToken) {
+            log.debug("User is already authenticated, redirecting to home page");
+            return true;
+        }
+
+        log.debug("User is not authenticated or is not an anonymous user");
+        return false;
     }
 }

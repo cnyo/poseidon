@@ -6,6 +6,7 @@ import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,12 @@ public class LoginController {
     private final Logger log = LogManager.getLogger(LoginController.class);
 
     @GetMapping("login")
-    public ModelAndView login() {
+    public ModelAndView login(Authentication authentication) {
+        if (!loginService.isAnonymousAuthentication(authentication)) {
+            log.info("User is already authenticated, redirecting to home page");
+            return new ModelAndView("redirect:/");
+        }
+
         log.info("Get login page");
         ModelAndView mav = new ModelAndView();
         Map<String, String> oauth2AuthenticationUrls = loginService.getOauth2AuthenticationUrls();
