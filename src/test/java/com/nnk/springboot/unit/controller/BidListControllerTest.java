@@ -3,6 +3,7 @@ package com.nnk.springboot.unit.controller;
 import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.services.BidListServiceImpl;
+import com.nnk.springboot.services.LoginServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,6 +32,9 @@ public class BidListControllerTest {
 
     @MockitoBean
     private BidListServiceImpl bidListService;
+
+    @MockitoBean
+    private LoginServiceImpl loginService;
 
     static BidList bid;
 
@@ -62,12 +66,13 @@ public class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getAllBidList_thenReturnBidListView() throws Exception {
         // Arrange
         List<BidList> bidLists = List.of(bid);
 
         when(bidListService.getAllBidList()).thenReturn(bidLists);
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         ResultActions result = mockMvc.perform(get("/bidList/list"));
@@ -77,6 +82,7 @@ public class BidListControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
                 .andExpect(model().attribute("bidLists", bidLists))
+                .andExpect(content().string(containsString("username")))
                 .andReturn();
     }
 
@@ -107,25 +113,6 @@ public class BidListControllerTest {
                 .param("account", bid.getAccount())
                 .param("type", "Type")
                 .param("bidQuantity", "2"));
-//                .param("askQuantity", "3")
-//                .param("bid", "4")
-//                .param("ask", "5")
-//                .param("benchmark", "Benchmark")
-//                .param("bidListDate", "2023-10-01T00:00:00")
-//                .param("commentary", "Commentary")
-//                .param("security", "Security")
-//                .param("status", "Status")
-//                .param("trader", "Trader")
-//                .param("book", "Book")
-//                .param("creationName", "CreationName")
-//                .param("creationDate", "2023-10-01T00:00:00")
-//                .param("type", "Type")
-//                .param("revisionName", "RevisionName")
-//                .param("revisionDate", "2023-10-01T00:00:00")
-//                .param("dealName", "DealName")
-//                .param("dealType", "DealType")
-//                .param("sourceListId", "SourceListId")
-//                .param("side", "Side"));
 
         // Assert
         result.andDo(print())

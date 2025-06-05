@@ -2,6 +2,7 @@ package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.TradeController;
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.services.LoginServiceImpl;
 import com.nnk.springboot.services.TradeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.sql.Timestamp;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -33,6 +35,9 @@ public class TradeControllerTest {
     @MockitoBean
     private TradeServiceImpl tradeService;
 
+    @MockitoBean
+    private LoginServiceImpl loginService;
+
     static Trade trade;
 
     @BeforeEach
@@ -45,12 +50,13 @@ public class TradeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getAllTrade_thenReturnTradeListView() throws Exception {
         // Arrange
         List<Trade> trades = List.of(trade);
 
         when(tradeService.getAllTrade()).thenReturn(trades);
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         ResultActions result = mockMvc.perform(get("/trade/list"));
@@ -60,6 +66,7 @@ public class TradeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/list"))
                 .andExpect(model().attribute("trades", trades))
+                .andExpect(content().string(containsString("username")))
                 .andReturn();
     }
 

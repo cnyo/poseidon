@@ -41,15 +41,13 @@ public class SecurityConfig {
         http
 //                .securityMatcher((request) -> !request.getRequestURI().startsWith("/api"))
                 .formLogin(form ->
-                        form.loginPage("/app/login")
-                                .permitAll())
+                        form.loginPage("/app/login").defaultSuccessUrl("/").permitAll())
                 .oauth2Login(form ->
-                        form.loginPage("/app/login")
-                                .permitAll())
+                        form.loginPage("/app/login").defaultSuccessUrl("/").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authenticationManager(customAuthenticationManager)
+//                .authenticationManager(customAuthenticationManager)
                 .authorizeHttpRequests(matcher -> matcher
-                        .requestMatchers("/app/login", "/app/error", "/user/list", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/app/login", "/app/error", "/user/list", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/admin/home", "/app/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

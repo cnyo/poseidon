@@ -2,6 +2,7 @@ package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.RatingController;
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.services.LoginServiceImpl;
 import com.nnk.springboot.services.RatingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -32,6 +34,9 @@ public class RatingControllerTest {
     @MockitoBean
     private RatingServiceImpl ratingService;
 
+    @MockitoBean
+    private LoginServiceImpl loginService;
+
     static Rating rating;
 
     @BeforeEach
@@ -45,12 +50,13 @@ public class RatingControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getAllTrade_thenReturnTradeListView() throws Exception {
         // Arrange
         List<Rating> ratings = List.of(rating);
 
         when(ratingService.getAllRating()).thenReturn(ratings);
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         ResultActions result = mockMvc.perform(get("/rating/list"));
@@ -60,6 +66,7 @@ public class RatingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/list"))
                 .andExpect(model().attribute("ratings", ratings))
+                .andExpect(content().string(containsString("username")))
                 .andReturn();
     }
 

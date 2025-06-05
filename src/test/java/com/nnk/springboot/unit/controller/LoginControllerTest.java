@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,13 +48,14 @@ public class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
-    public void getLoginPage_shouldReturnView() throws Exception {
+    @WithMockUser
+    public void getLoginPage_whenUserIsNotAuthenticated_shouldReturnView() throws Exception {
         // arrange
         Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
         oauth2AuthenticationUrls.put("github", "https://accounts.github.com/o/oauth2/auth");
 
         // Mock the loginService to return the OAuth2 authentication URLs
+        when(loginService.isAnonymousAuthentication(any())).thenReturn(true);
         when(loginService.getOauth2AuthenticationUrls()).thenReturn(oauth2AuthenticationUrls);
 
         // Act
@@ -68,10 +70,30 @@ public class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
-    public void getLoginPage_whenNoOauth2Urls_shouldReturnView() throws Exception {
+    @WithMockUser
+    public void getLoginPage_whenUserIsAuthenticated_shouldReturnView() throws Exception {
+        // arrange
+        Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
+        oauth2AuthenticationUrls.put("github", "https://accounts.github.com/o/oauth2/auth");
+
+        // Mock the loginService to return the OAuth2 authentication URLs
+        when(loginService.isAnonymousAuthentication(any())).thenReturn(false);
+
+        // Act
+        // Simulate a GET request to the login page
+        mockMvc.perform(get("/app/login"))
+                .andDo(print()) // Print the result for debugging
+                .andExpect(status().is3xxRedirection()) // Expect HTTP 200 OK status
+                .andExpect(view().name("redirect:/")) // Expect the view name to be "redirect:/app/home"
+                .andExpect(redirectedUrl("/")); // Expect the redirect URL to be "/app/home"
+    }
+
+    @Test
+    @WithMockUser
+    public void getLoginPage_whenUserIsNotAuthenticatedAndNoOauth2Urls_shouldReturnView() throws Exception {
         // arrange
         // Mock the loginService to return the OAuth2 authentication URLs
+        when(loginService.isAnonymousAuthentication(any())).thenReturn(true);
         when(loginService.getOauth2AuthenticationUrls()).thenReturn(new HashMap<>());
 
         // Act
@@ -102,7 +124,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getError403Page_shouldReturnView() throws Exception {
         // Act
         mockMvc.perform(get("/app/error"))

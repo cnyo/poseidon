@@ -1,8 +1,8 @@
 package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.HomeController;
-import com.nnk.springboot.controllers.LoginController;
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.services.LoginServiceImpl;
 import com.nnk.springboot.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,6 +28,9 @@ public class HomeControllerTest {
     @MockitoBean
     private UserServiceImpl userService;
 
+    @MockitoBean
+    private LoginServiceImpl loginService;
+
     private DbUser user;
 
     @BeforeEach
@@ -41,13 +44,16 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getHomePage_shouldReturnView() throws Exception {
+        // Arrange
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("username")))
                 .andExpect(view().name("home"));
     }
 

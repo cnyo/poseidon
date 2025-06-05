@@ -2,6 +2,7 @@ package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.RuleNameController;
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.services.LoginServiceImpl;
 import com.nnk.springboot.services.RuleNameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -33,6 +35,9 @@ public class RuleNameControllerTest {
     @MockitoBean
     private RuleNameServiceImpl ruleNameService;
 
+    @MockitoBean
+    private LoginServiceImpl loginService;
+
     static RuleName ruleName;
 
     @BeforeEach
@@ -48,12 +53,13 @@ public class RuleNameControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getAllBidList_thenReturnRuleNameListView() throws Exception {
         // Arrange
         List<RuleName> ruleNames = List.of(ruleName);
 
         when(ruleNameService.getAllRuleName()).thenReturn(ruleNames);
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         ResultActions result = mockMvc.perform(get("/ruleName/list"));
@@ -63,6 +69,7 @@ public class RuleNameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/list"))
                 .andExpect(model().attribute("ruleNames", ruleNames))
+                .andExpect(content().string(containsString("username")))
                 .andReturn();
     }
 

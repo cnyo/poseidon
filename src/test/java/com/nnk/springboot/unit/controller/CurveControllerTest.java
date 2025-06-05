@@ -3,6 +3,7 @@ package com.nnk.springboot.unit.controller;
 import com.nnk.springboot.controllers.CurveController;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointServiceImpl;
+import com.nnk.springboot.services.LoginServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.sql.Timestamp;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -35,6 +37,9 @@ public class CurveControllerTest {
     @MockitoBean
     private CurvePointServiceImpl curvePointService;
 
+    @MockitoBean
+    private LoginServiceImpl loginService;
+
     static CurvePoint curvePoint;
 
     @BeforeEach
@@ -47,12 +52,13 @@ public class CurveControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser
     public void getAllCurvePoint_thenReturnCurvePointListView() throws Exception {
         // Arrange
         List<CurvePoint> curvePoints = List.of(curvePoint);
 
         when(curvePointService.getAllCurvePoint()).thenReturn(curvePoints);
+        when(loginService.getDisplayName(any())).thenReturn("username");
 
         // Act
         ResultActions result = mockMvc.perform(get("/curvePoint/list"));
@@ -62,6 +68,7 @@ public class CurveControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/list"))
                 .andExpect(model().attribute("curvePoints", curvePoints))
+                .andExpect(content().string(containsString("username")))
                 .andReturn();
     }
 

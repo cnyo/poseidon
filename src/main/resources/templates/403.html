@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Unauthorized Access</title>
+</head>
+<body>
+<h3>Not authorized</h3>
+<div>
+    <p>
+        You do not have permission to access this page. <br>
+        Please check your credentials or contact the site administrator if you believe this is an error.
+    </p>
+</div>
+
+<p class="error" th:if="${errorMsg != null}" th:text="${errorMsg}">Error 401</p>
+</body>
+</html>
