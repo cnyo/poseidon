@@ -16,4 +16,6 @@ public interface LoginService {
     Map<String, String> getOauth2AuthenticationUrls();
 
     boolean isAnonymousAuthentication(Authentication authentication);
+
+    String getDisplayName(Authentication authentication);
 }

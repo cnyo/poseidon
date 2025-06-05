@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -143,5 +145,24 @@ public class LoginServiceImpl implements LoginService {
 
         log.debug("User is not authenticated or is not an anonymous user");
         return false;
+    }
+
+    @Override
+    public String getDisplayName(Authentication authentication) {
+        String displayName = "remoteUser";
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof OAuth2User oAuth2User) {
+                displayName = oAuth2User.getAttribute("name");
+            }
+
+            if (principal instanceof UserDetails userDetails) {
+                displayName = userDetails.getUsername();
+            }
+        }
+
+        return displayName;
     }
 }

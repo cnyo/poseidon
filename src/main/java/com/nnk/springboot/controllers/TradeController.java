@@ -1,8 +1,12 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.services.LoginService;
 import com.nnk.springboot.services.TradeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,11 +25,17 @@ public class TradeController {
     @Autowired
     private TradeService tradeService;
 
+    @Autowired
+    private LoginService loginService;
+
+    private final Logger log = LogManager.getLogger(BidListController.class);
+
     @RequestMapping("/trade/list")
-    public String home(Model model)
+    public String home(Model model, Authentication authentication)
     {
         List<Trade> trades= tradeService.getAllTrade();
         model.addAttribute("trades", trades);
+        model.addAttribute("displayName", loginService.getDisplayName(authentication));
 
         return "trade/list";
     }

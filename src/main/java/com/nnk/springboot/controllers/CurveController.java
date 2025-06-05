@@ -2,7 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
+import com.nnk.springboot.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +19,15 @@ public class CurveController {
     @Autowired
     private CurvePointService curvePointService;
 
+    @Autowired
+    private LoginService loginService;
+
     @RequestMapping("/curvePoint/list")
-    public String home(Model model)
+    public String home(Model model, Authentication authentication)
     {
         List<CurvePoint> curvePoints = curvePointService.getAllCurvePoint();
         model.addAttribute("curvePoints", curvePoints);
+        model.addAttribute("displayName", loginService.getDisplayName(authentication));
 
         return "curvePoint/list";
     }

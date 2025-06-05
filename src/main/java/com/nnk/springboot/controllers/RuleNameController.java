@@ -1,8 +1,12 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.services.LoginService;
 import com.nnk.springboot.services.RuleNameService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,10 +25,16 @@ public class RuleNameController {
     @Autowired
     private RuleNameService ruleNameService;
 
+    @Autowired
+    private LoginService loginService;
+
+    private final Logger log = LogManager.getLogger(RuleNameController.class);
+
     @RequestMapping("/ruleName/list")
-    public String home(Model model) {
+    public String home(Model model, Authentication authentication) {
         List<RuleName> ruleNames = ruleNameService.getAllRuleName();
         model.addAttribute("ruleNames", ruleNames);
+        model.addAttribute("displayName", loginService.getDisplayName(authentication));
 
         return "ruleName/list";
     }
