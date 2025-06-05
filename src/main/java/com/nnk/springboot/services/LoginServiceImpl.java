@@ -5,31 +5,29 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/**
+ * Service implementation for handling login-related operations.
+ * This includes retrieving OAuth2 authentication URLs, checking for anonymous authentication,
+ * and getting the display name of the authenticated user.
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
     private static String AUTORIZATION_REQUEST_BASE_URI = "oauth2/authorization";
+    private static String DEFAULT_DISPLAY_USERNAME = "remoteUser";
 
     @Autowired
     private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
@@ -39,64 +37,11 @@ public class LoginServiceImpl implements LoginService {
 
     private final Logger log = LogManager.getLogger(LoginServiceImpl.class);
 
-    @Override
-    public StringBuffer getUsernamePasswordLoginInfo(Principal user) {
-        log.debug("Processing UsernamePassword login info");
-        StringBuffer usernameInfo = new StringBuffer();
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) user;
-
-        if (token.isAuthenticated()) {
-            log.info("Authenticated user");
-            User u = (User) token.getPrincipal();
-            usernameInfo.append("Welcome, " + u.getUsername());
-        } else {
-            log.info("Not authenticated user");
-            usernameInfo.append("NA");
-        }
-
-        log.info("Returning username info: {}", usernameInfo);
-        return usernameInfo;
-    }
-
-    @Override
-    public StringBuffer getOauth2LoginInfo(Principal user, OidcUser oidcUser) {
-        log.debug("Processing OAuth2 login info");
-        StringBuffer protectedInfo = new StringBuffer();
-        OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) user;
-
-        OAuth2AuthorizedClient authClient = oAuth2AuthorizedClientService.loadAuthorizedClient(
-                token.getAuthorizedClientRegistrationId(), token.getName()
-        );
-
-        if (token.isAuthenticated()) {
-            log.info("Authenticated");
-            Map<String, Object> attributes = ((DefaultOAuth2User) token.getPrincipal()).getAttributes();
-            String accessToken = authClient.getAccessToken().getTokenValue();
-            protectedInfo.append("Welcome, " + attributes.get("name") + "<br><br>");
-            protectedInfo.append("e-mail : " + attributes.get("email") + "<br><br>");
-            protectedInfo.append("Access token: " + accessToken);
-
-            if (oidcUser != null) {
-                log.debug("OIDC has oidcUser");
-                OidcIdToken idToken = oidcUser.getIdToken();
-                if (idToken != null) {
-                    log.debug("OIDC get IDToken");
-                    Map<String, Object> claims = idToken.getClaims();
-                    for (String key : claims.keySet()) {
-                        protectedInfo.append(" " + key + ": " + claims.get(key) + "<br>");
-                    }
-                }
-            }
-
-        } else {
-            log.info("Not authenticated");
-            protectedInfo.append("NA");
-        }
-
-        log.info("Returning protected info: {}", protectedInfo);
-        return protectedInfo;
-    }
-
+    /**
+     * Retrieves the OAuth2 authentication URLs for all registered clients.
+     *
+     * @return a map where the key is the client registration ID and the value is the authorization URL.
+     */
     @Override
     public Map<String, String> getOauth2AuthenticationUrls() {
         log.debug("Processing OAuth2 authentication urls");
@@ -131,6 +76,12 @@ public class LoginServiceImpl implements LoginService {
         return oauth2AuthenticationUrls;
     }
 
+    /**
+     * Checks if the given authentication is an anonymous authentication.
+     *
+     * @param authentication the authentication object to check.
+     * @return true if the authentication is anonymous, false otherwise.
+     */
     @Override
     public boolean isAnonymousAuthentication(Authentication authentication) {
         if (authentication == null) {
@@ -138,7 +89,7 @@ public class LoginServiceImpl implements LoginService {
             return true;
         }
 
-        if (authentication.isAuthenticated() && authentication instanceof AnonymousAuthenticationToken) {
+        if (authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             log.debug("User is already authenticated, redirecting to home page");
             return true;
         }
@@ -147,22 +98,40 @@ public class LoginServiceImpl implements LoginService {
         return false;
     }
 
+    /**
+     * Retrieves the display name for the given authentication.
+     * This could be the username from UserDetails or OAuth2User, or a default value if not available.
+     *
+     * @param authentication the authentication object.
+     * @return the display name, which could be the username or a default value if not available.
+     */
     @Override
     public String getDisplayName(Authentication authentication) {
-        String displayName = "remoteUser";
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.debug("Authentication object is null or not authenticated, returning default display name");
+            return DEFAULT_DISPLAY_USERNAME;
+        }
 
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
 
             if (principal instanceof OAuth2User oAuth2User) {
-                displayName = oAuth2User.getAttribute("name");
+                String name = oAuth2User.getAttribute("name");
+                if (name != null && !name.isBlank()) {
+                    log.debug("Returning OAuth2 user name");
+                    return name;
+                }
             }
 
             if (principal instanceof UserDetails userDetails) {
-                displayName = userDetails.getUsername();
+                String username = userDetails.getUsername();
+                if (username != null && !username.isBlank()) {
+                    log.debug("Returning UserDetails username");
+                    return username;
+                }
             }
         }
 
-        return displayName;
+        return DEFAULT_DISPLAY_USERNAME;
     }
 }
