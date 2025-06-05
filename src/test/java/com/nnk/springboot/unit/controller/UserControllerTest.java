@@ -2,6 +2,7 @@ package com.nnk.springboot.unit.controller;
 
 import com.nnk.springboot.controllers.UserController;
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.services.PasswordService;
 import com.nnk.springboot.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,6 +32,9 @@ public class UserControllerTest {
 
     @MockitoBean
     private UserServiceImpl userService;
+
+    @MockitoBean
+    private PasswordService passwordService;
 
     static DbUser user;
 
@@ -75,8 +78,9 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user")
-    public void postUser_thenRedirectToUserListView() throws Exception {
+    public void postUser_withValidatePassword_thenRedirectToUserListView() throws Exception {
         // Arrange
+        when(passwordService.isValidPassword(anyString())).thenReturn(true);
         when(userService.saveUser(any())).thenReturn(user);
 
         // Act
@@ -96,6 +100,27 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user")
+    public void postUser_withUnValidatePassword_thenRedirectToUserListView() throws Exception {
+        // Arrange
+        when(passwordService.isValidPassword(anyString())).thenReturn(false);
+
+        // Act
+        ResultActions result = mockMvc.perform(post("/user/validate")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fullname", "fullname")
+                .param("username", "username")
+                .param("password", "password")
+                .param("role", "role"));
+
+        // Assert
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/add"));
+    }
+
+    @Test
+    @WithMockUser
     public void getUserById_thenShowUpdateFormView() throws Exception {
         // Arrange
         when(userService.getUser(any())).thenReturn(user);
@@ -112,9 +137,10 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "user")
-    public void updateUser_thenRedirectToUserListView() throws Exception {
+    public void updateUser_withValidatePassword_thenRedirectToUserListView() throws Exception {
         // Arrange
         when(userService.updateUser(anyInt(), any())).thenReturn(user);
+        when(passwordService.isValidPassword(anyString())).thenReturn(true);
 
         // Act
         ResultActions result = mockMvc.perform(post("/user/update/{id}", user.getId())
@@ -129,6 +155,28 @@ public class UserControllerTest {
         result.andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/list"));
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void updateUser_withInvalidatePassword_thenUpdateView() throws Exception {
+        // Arrange
+        when(userService.updateUser(anyInt(), any())).thenReturn(user);
+        when(passwordService.isValidPassword(anyString())).thenReturn(false);
+
+        // Act
+        ResultActions result = mockMvc.perform(post("/user/update/{id}", user.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fullname", "fullname")
+                .param("username", "username")
+                .param("password", "password")
+                .param("role", "role"));
+
+        // Assert
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/update"));
     }
 
     @Test

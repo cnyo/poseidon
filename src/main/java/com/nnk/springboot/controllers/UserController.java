@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.services.PasswordService;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,9 +17,14 @@ import jakarta.validation.Valid;
 @Controller
 public class UserController {
     @Autowired
+    private PasswordService passwordService;
+
+    @Autowired
     private UserService userService;
 
     private final Logger log = LogManager.getLogger(UserController.class);
+
+    String INVALID_PASSWORD_MESSAGE = "Password must be between 8 and 20 characters, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.";
 
     @RequestMapping("/user/list")
     public String home(Model model)
@@ -36,6 +42,10 @@ public class UserController {
 
     @PostMapping("/user/validate")
     public String validate(@Valid @ModelAttribute("user") DbUser user, BindingResult result, Model model) {
+        if (!passwordService.isValidPassword(user.getPassword())) {
+            result.rejectValue("password", "error.user", INVALID_PASSWORD_MESSAGE);
+        }
+
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
@@ -58,6 +68,10 @@ public class UserController {
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid @ModelAttribute("user") DbUser user,
                              BindingResult result, Model model) {
+        if (!passwordService.isValidPassword(user.getPassword())) {
+            result.rejectValue("password", "error.user", INVALID_PASSWORD_MESSAGE);
+        }
+
         if (result.hasErrors()) {
             log.error(result.getAllErrors().toString());
             user.setId(id);
