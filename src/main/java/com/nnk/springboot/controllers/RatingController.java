@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.form.RatingForm;
 import com.nnk.springboot.services.LoginService;
 import com.nnk.springboot.services.RatingService;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +28,7 @@ public class RatingController {
     @Autowired
     private LoginService loginService;
 
-    private final Logger log = LogManager.getLogger(LoginController.class);
+    private final Logger log = LogManager.getLogger(RatingController.class);
 
     @RequestMapping("/rating/list")
     public String home(Model model, Authentication authentication)
@@ -41,23 +42,25 @@ public class RatingController {
     }
 
     @GetMapping("/rating/add")
-    public String addRatingForm(Rating rating, Model model) {
+    public String addRatingForm(Model model) {
         log.info("Add rating form");
-        model.addAttribute("rating", new Rating());
+        model.addAttribute("rating", new RatingForm());
 
         return "rating/add";
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
+    public String validate(@Valid RatingForm ratingForm, BindingResult result, Model model) {
         log.info("Validate rating form");
 
         if (result.hasErrors()) {
             log.error(result.getAllErrors().toString());
+            model.addAttribute("rating", ratingForm);
             return "rating/add";
         }
 
         try {
+            Rating rating = ratingService.formToRating(ratingForm);
             ratingService.addRating(rating);
             log.info("Rating added");
 
@@ -67,32 +70,37 @@ public class RatingController {
 
             return "rating/add";
         }
-
     }
 
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         log.info("Get rating form");
-        Rating rating = ratingService.getRating(id);
-        model.addAttribute("rating", rating);
-        log.info("Rating updated");
+        try {
+            Rating rating = ratingService.getRating(id);
+            RatingForm ratingForm = ratingService.ratingToForm(rating);
+            model.addAttribute("rating", ratingForm);
 
-        return "rating/update";
+            return "rating/update";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "redirect:/rating/list";
+        }
     }
 
     @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
+    public String updateRating(@PathVariable("id") Integer id, @Valid RatingForm ratingForm,
                              BindingResult result, Model model) {
         log.info("Update rating form");
 
         if (result.hasErrors()) {
             log.error(result.getAllErrors().toString());
-            model.addAttribute("rating", rating);
+            model.addAttribute("rating", ratingForm);
 
             return "rating/update";
         }
 
         try {
+            Rating rating = ratingService.formToRating(ratingForm);
             ratingService.updateRating(id, rating);
             log.info("Rating updated");
         } catch (Exception e) {

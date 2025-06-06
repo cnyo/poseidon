@@ -1,6 +1,7 @@
 package com.nnk.springboot.unit.services;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.form.RatingForm;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingServiceImpl;
 import org.junit.Assert;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +36,7 @@ public class RatingServiceTest {
 
     @BeforeEach
     public void setUp() {
-        rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+        rating = new Rating("30", "30", "30", 10);
         rating.setId(20);
     }
 
@@ -58,7 +60,7 @@ public class RatingServiceTest {
     @Test
     public void saveRating_mustReturnRating() throws IllegalArgumentException {
         // Arrange
-        Rating insertedRating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+        Rating insertedRating = new Rating("30", "30", "Fitch Rating", 10);
         insertedRating.setId(1);
 
         when(ratingRepository.save(any())).thenReturn(insertedRating);
@@ -119,5 +121,48 @@ public class RatingServiceTest {
 
         // Assert
         verify(ratingRepository, times(1)).deleteById(rating.getId());
+    }
+
+    @Test
+    public void getFormToRating_shouldReturnRating() throws IllegalArgumentException {
+        // Arrange
+        RatingForm ratingForm = new RatingForm();
+        ratingForm.setOrder(10);
+        ratingForm.setMoodysRating(30);
+        ratingForm.setSandPRating(30);
+        ratingForm.setFitchRating(30);
+
+        // Act
+        Rating result = ratingService.formToRating(ratingForm);
+
+        // Assert
+        assertThat(result).isInstanceOf(Rating.class);
+        assertThat(result.getOrder()).isEqualTo(10);
+        assertThat(result.getMoodysRating()).isEqualTo("30");
+        assertThat(result.getSandPRating()).isEqualTo("30");
+        assertThat(result.getFitchRating()).isEqualTo("30");
+    }
+
+    @Test
+    public void getFormToRating_withNullForm_shouldThrowException() throws IllegalArgumentException {
+        assertThrows(IllegalArgumentException.class, () -> ratingService.formToRating(null));
+    }
+
+    @Test
+    public void getRatingToForm_shouldReturnFormRating() throws IllegalArgumentException {        // Act
+        RatingForm result = ratingService.ratingToForm(rating);
+
+        // Assert
+        assertThat(result).isInstanceOf(RatingForm.class);
+        assertThat(result.getOrder()).isEqualTo(10);
+        assertThat(result.getMoodysRating()).isEqualTo(30);
+        assertThat(result.getSandPRating()).isEqualTo(30);
+        assertThat(result.getFitchRating()).isEqualTo(30);
+    }
+
+    @Test
+    public void getRatingToForm_withNullRating_shouldReturnFormRating() throws IllegalArgumentException {        // Act
+        assertThrows(IllegalArgumentException.class, () -> ratingService.ratingToForm(null));
+
     }
 }
