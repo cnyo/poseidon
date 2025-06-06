@@ -46,7 +46,7 @@ public class CurveController {
         }
 
         try {
-            curvePointService.saveCurvePoint(curvePoint);
+            curvePointService.addCurvePoint(curvePoint);
 
             return "redirect:/curvePoint/list";
         } catch (Exception e) {

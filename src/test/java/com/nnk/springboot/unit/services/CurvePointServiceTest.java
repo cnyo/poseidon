@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,7 +57,7 @@ public class CurvePointServiceTest {
     }
 
     @Test
-    public void saveCurvePoint_mustReturnCurvePoint() throws IllegalArgumentException {
+    public void addCurvePoint_mustReturnCurvePoint() throws IllegalArgumentException {
         // Arrange
         when(curvePointRepository.save(any())).thenReturn(curvePoint);
 
@@ -69,7 +70,7 @@ public class CurvePointServiceTest {
     }
 
     @Test
-    public void saveCurvePoint_withNullData_mustReturnException() {
+    public void addCurvePoint_withNullData_mustReturnException() {
         // Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> curvePointService.addCurvePoint(null));
 
@@ -94,6 +95,12 @@ public class CurvePointServiceTest {
     }
 
     @Test
+    public void getCurvePoint_withNullId_mustThrowException() throws IllegalArgumentException {
+        // Act
+        assertThrows(IllegalArgumentException.class, () -> curvePointService.getCurvePoint(null));
+    }
+
+    @Test
     public void updateCurvePoint_mustReturnCurvePoint() throws IllegalArgumentException {
         // Arrange
         when(curvePointRepository.findById(anyInt())).thenReturn(Optional.ofNullable(curvePoint));
@@ -107,6 +114,26 @@ public class CurvePointServiceTest {
         Assertions.assertNotNull(result);
         Assertions.assertInstanceOf(CurvePoint.class, result);
         Assert.assertTrue(curvePoint.getTerm() == 30d);
+    }
+
+    @Test
+    public void updateCurvePoint_whenNotExistsCurvePoint_mustReturnnull() throws IllegalArgumentException {
+        // Arrange
+        when(curvePointRepository.findById(anyInt())).thenReturn(Optional.empty());
+        curvePoint.setTerm(30d);
+
+        // Act
+        CurvePoint result = curvePointService.updateCurvePoint(10, curvePoint);
+
+        // Assert
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void updateCurvePoint_withNullParams_mustThrowException() throws IllegalArgumentException {
+        // Act
+        assertThrows(IllegalArgumentException.class, () -> curvePointService.updateCurvePoint(null, curvePoint));
+        assertThrows(IllegalArgumentException.class, () -> curvePointService.updateCurvePoint(10, null));
     }
 
     @Test

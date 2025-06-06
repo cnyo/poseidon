@@ -11,8 +11,6 @@ public interface CurvePointService {
 
     CurvePoint getCurvePoint(Integer id);
 
-    CurvePoint saveCurvePoint(CurvePoint curvePoint);
-
     CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint);
 
     void deleteCurvePoint(Integer id);

@@ -28,15 +28,6 @@ public class CurvePointServiceImpl implements CurvePointService {
     }
 
     @Override
-    public CurvePoint saveCurvePoint(CurvePoint curvePoint) {
-        if (curvePoint == null) {
-            throw new IllegalArgumentException("CurvePoint cannot be null");
-        }
-
-        return curvePointRepository.save(curvePoint);
-    }
-
-    @Override
     public CurvePoint updateCurvePoint(Integer id, CurvePoint curvePoint) {
         if (id == null || curvePoint == null) {
             throw new IllegalArgumentException("CurvePoint ID and CurvePoint cannot be null");

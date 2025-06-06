@@ -91,7 +91,7 @@ public class CurveControllerTest {
         // Arrange
         curvePoint.setCreationDate(new Timestamp(System.currentTimeMillis()));
         curvePoint.setAsOfDate(new Timestamp(System.currentTimeMillis()));
-        when(curvePointService.saveCurvePoint(any())).thenReturn(curvePoint);
+        when(curvePointService.addCurvePoint(any())).thenReturn(curvePoint);
 
         // Act
         ResultActions result = mockMvc.perform(post("/curvePoint/validate")
