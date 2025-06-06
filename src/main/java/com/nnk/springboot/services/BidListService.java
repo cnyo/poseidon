@@ -2,7 +2,6 @@ package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.form.BidListForm;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,7 +9,6 @@ import java.util.List;
  * Service interface for managing BidLists.
  * Provides methods to retrieve, save, update, and delete BidLists.
  */
-@Service
 public interface BidListService {
 
     /**

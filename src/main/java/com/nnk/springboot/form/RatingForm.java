@@ -2,6 +2,10 @@ package com.nnk.springboot.form;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Form class for Rating, used to capture user input for creating or updating a Rating.
+ * It includes validation annotations to ensure that the required fields are provided.
+ */
 public class RatingForm {
     @NotNull(message = "Moodys Rating is mandatory")
     private Integer id;

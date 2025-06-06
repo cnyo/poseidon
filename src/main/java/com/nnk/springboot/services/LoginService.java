@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import java.util.Map;
  * This includes retrieving OAuth2 authentication URLs, checking for anonymous authentication,
  * and getting the display name of the authenticated user.
  */
-@Service
 public interface LoginService {
 
     /**

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of the TradeService interface.
+ * Provides methods to manage trades, including retrieval, saving, updating, and deleting.
+ */
 @Service
 public class TradeServiceImpl implements TradeService {
 
@@ -18,6 +22,13 @@ public class TradeServiceImpl implements TradeService {
         return tradeRepository.findAll();
     }
 
+    /**
+     * Retrieves a Trade by its ID.
+     *
+     * @param id the ID of the Trade to retrieve
+     * @return the Trade with the specified ID, or null if not found
+     * @throws IllegalArgumentException if the ID is null
+     */
     @Override
     public Trade getTrade(Integer id) {
         if (id == null) {
@@ -27,6 +38,13 @@ public class TradeServiceImpl implements TradeService {
         return tradeRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Saves a Trade to the repository.
+     *
+     * @param trade the Trade to save
+     * @return the saved Trade
+     * @throws IllegalArgumentException if the Trade is null
+     */
     @Override
     public Trade saveTrade(Trade trade) {
         if (trade == null) {
@@ -36,6 +54,14 @@ public class TradeServiceImpl implements TradeService {
         return tradeRepository.save(trade);
     }
 
+    /**
+     * Updates an existing Trade.
+     *
+     * @param id the ID of the Trade to update
+     * @param trade the updated Trade data
+     * @return the updated Trade, or null if the Trade does not exist
+     * @throws IllegalArgumentException if id or trade is null
+     */
     @Override
     public Trade updateTrade(Integer id, Trade trade) {
         if (id == null || trade == null) {
@@ -67,11 +93,24 @@ public class TradeServiceImpl implements TradeService {
         return null;
     }
 
+    /**
+     * Deletes a Trade by its ID.
+     *
+     * @param id the ID of the Trade to delete
+     * @throws IllegalArgumentException if id is null
+     */
     @Override
     public void deleteTrade(Integer id) {
         tradeRepository.deleteById(id);
     }
 
+    /**
+     * Adds a new Trade to the repository.
+     *
+     * @param trade the Trade to add
+     * @return the added Trade
+     * @throws IllegalArgumentException if the Trade is null or invalid
+     */
     @Override
     public Trade addTrade(Trade trade) throws IllegalArgumentException {
         if (trade == null) {

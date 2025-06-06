@@ -20,6 +20,10 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+/**
+ * Controller for managing ratings.
+ * Provides endpoints for listing, adding, updating, and deleting ratings.
+ */
 @Controller
 public class RatingController {
     @Autowired
@@ -30,6 +34,13 @@ public class RatingController {
 
     private final Logger log = LogManager.getLogger(RatingController.class);
 
+    /**
+     * Displays the rating list page with all ratings.
+     *
+     * @param model the model to add attributes for the view
+     * @param authentication the authentication object to get user details
+     * @return the name of the view to render
+     */
     @RequestMapping("/rating/list")
     public String home(Model model, Authentication authentication)
     {
@@ -41,6 +52,12 @@ public class RatingController {
         return "rating/list";
     }
 
+    /**
+     * Displays the form for adding a new rating.
+     *
+     * @param model the model to add attributes for the view
+     * @return the name of the view to render
+     */
     @GetMapping("/rating/add")
     public String addRatingForm(Model model) {
         log.info("Add rating form");
@@ -49,6 +66,14 @@ public class RatingController {
         return "rating/add";
     }
 
+    /**
+     * Validates and processes the rating form submission.
+     *
+     * @param ratingForm the form data to validate and process
+     * @param result the binding result to capture validation errors
+     * @param model the model to add attributes for the view
+     * @return the name of the view to render or redirect based on success
+     */
     @PostMapping("/rating/validate")
     public String validate(@Valid RatingForm ratingForm, BindingResult result, Model model) {
         log.info("Validate rating form");
@@ -72,6 +97,13 @@ public class RatingController {
         }
     }
 
+    /**
+     * Displays the form for updating an existing rating.
+     *
+     * @param id the ID of the rating to update
+     * @param model the model to add attributes for the view
+     * @return the name of the view to render or redirect if not found
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         log.info("Get rating form");
@@ -87,6 +119,15 @@ public class RatingController {
         }
     }
 
+    /**
+     * Validates and updates an existing rating.
+     *
+     * @param id the ID of the rating to update
+     * @param ratingForm the form data to validate and update
+     * @param result the binding result to capture validation errors
+     * @param model the model to add attributes for the view
+     * @return the name of the view to render or redirect based on success
+     */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid RatingForm ratingForm,
                              BindingResult result, Model model) {
@@ -112,6 +153,12 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
+    /**
+     * Deletes a rating by its ID.
+     *
+     * @param id the ID of the rating to delete
+     * @return a redirect to the rating list page
+     */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id) {
         log.info("Delete rating form");

@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.DbUser;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -9,7 +8,6 @@ import java.util.List;
  * Service interface for managing users.
  * Provides methods to perform CRUD operations on user data.
  */
-@Service
 public interface UserService {
     /**
      * Retrieves all users.

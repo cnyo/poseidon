@@ -1,14 +1,12 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.RuleName;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /** * Service interface for managing RuleNames.
  * Provides methods to retrieve, update, add, and delete RuleNames.
  */
-@Service
 public interface RuleNameService {
 
     /**

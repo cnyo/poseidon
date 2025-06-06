@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CustomAuthenticationManager is responsible for authenticating users based on their credentials.
- * It implements the AuthenticationManager interface and uses UserService to retrieve user details.
+ * Custom AuthenticationManager implementation for handling user authentication.
+ * This class checks the user's credentials against the database and returns an authenticated User object.
  */
 @Component
 public class CustomAuthenticationManager implements AuthenticationManager {

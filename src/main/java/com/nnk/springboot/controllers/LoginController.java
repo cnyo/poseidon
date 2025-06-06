@@ -14,6 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
+/**
+ * Controller for handling login and user-related requests.
+ * Provides endpoints for displaying the login page, user articles, and error pages.
+ */
 @Controller
 @RequestMapping("app")
 public class LoginController {
@@ -26,6 +30,13 @@ public class LoginController {
 
     private final Logger log = LogManager.getLogger(LoginController.class);
 
+    /**
+     * Displays the login page if the user is not authenticated.
+     * If the user is already authenticated, redirects to the home page.
+     *
+     * @param authentication the authentication object to check user status
+     * @return ModelAndView object containing the login page or redirect to home
+     */
     @GetMapping("login")
     public ModelAndView login(Authentication authentication) {
         if (!loginService.isAnonymousAuthentication(authentication)) {
@@ -44,6 +55,12 @@ public class LoginController {
         return mav;
     }
 
+    /**
+     * Displays the user articles page for authenticated users.
+     * This endpoint is secured and requires authentication.
+     *
+     * @return ModelAndView object containing the user articles page
+     */
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {
         log.info("Get all user articles");
@@ -55,6 +72,12 @@ public class LoginController {
         return mav;
     }
 
+    /**
+     * Displays the error page when the user is not authorized to access certain data.
+     * This endpoint is secured and requires authentication.
+     *
+     * @return ModelAndView object containing the error page
+     */
     @GetMapping("error")
     public ModelAndView error() {
         log.info("Get error page");
