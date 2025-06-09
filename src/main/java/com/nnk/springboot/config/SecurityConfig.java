@@ -1,10 +1,11 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.security.CustomAuthenticationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,16 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
  * It configures HTTP security, authentication, and authorization.
  */
 @EnableMethodSecurity
+//@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
     private final Logger log = LogManager.getLogger(SecurityConfig.class);
-
-    private final CustomAuthenticationManager customAuthenticationManager;
-
-    SecurityConfig(CustomAuthenticationManager customAuthenticationManager) {
-        this.customAuthenticationManager = customAuthenticationManager;
-    }
 
     /**
      * Configures the security filter chain for the application.
@@ -41,13 +37,18 @@ public class SecurityConfig {
         http
 //                .securityMatcher((request) -> !request.getRequestURI().startsWith("/api"))
                 .formLogin(form ->
-                        form.loginPage("/app/login").defaultSuccessUrl("/").permitAll())
+                        form.loginPage("/app/login")
+                                .defaultSuccessUrl("/transaction", true)
+                                .defaultSuccessUrl("/")
+                                .failureUrl("/login?error")
+                                .permitAll())
                 .oauth2Login(form ->
                         form.loginPage("/app/login").defaultSuccessUrl("/").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
-//                .authenticationManager(customAuthenticationManager)
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(matcher -> matcher
-                        .requestMatchers("/", "/app/login", "/app/error", "/user/list", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/app/error", "/user/list", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/app/login").anonymous()
                         .requestMatchers("/admin/home", "/app/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
