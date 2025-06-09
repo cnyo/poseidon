@@ -141,13 +141,14 @@ public class RatingController {
         }
 
         try {
+            ratingForm.setId(id);
             Rating rating = ratingService.formToRating(ratingForm);
             ratingService.updateRating(id, rating);
             log.info("Rating updated");
         } catch (Exception e) {
             log.error(e.getMessage());
             result.rejectValue("curveId", "error.curveId", "Curve ID already exists");
-            return "rating/update";
+            return "rating/update/";
         }
 
         return "redirect:/rating/list";

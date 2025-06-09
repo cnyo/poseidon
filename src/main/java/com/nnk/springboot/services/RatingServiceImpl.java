@@ -143,6 +143,7 @@ public class RatingServiceImpl implements RatingService {
         }
 
         RatingForm ratingForm = new RatingForm();
+        ratingForm.setId(rating.getId());
         ratingForm.setMoodysRating(Integer.parseInt(rating.getMoodysRating()));
         ratingForm.setSandPRating(Integer.parseInt(rating.getSandPRating()));
         ratingForm.setFitchRating(Integer.parseInt(rating.getFitchRating()));

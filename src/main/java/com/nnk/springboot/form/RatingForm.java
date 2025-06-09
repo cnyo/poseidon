@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
  * It includes validation annotations to ensure that the required fields are provided.
  */
 public class RatingForm {
-    @NotNull(message = "Moodys Rating is mandatory")
     private Integer id;
 
     @NotNull(message = "Moodys Rating is mandatory")
