@@ -18,19 +18,20 @@
         <File name="MAIN" fileName="logs/poseidon/main.log">
             <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
-        <File name="payMyBuddy" fileName="logs/poseidon/poseidon.log">
+        <File name="poseidon" fileName="logs/poseidon/poseidon.log">
             <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
 
     <Loggers>
-        <Root level="INFO">
+        <Root level="DEBUG">
             <AppenderRef ref="CONSOLE"/>
             <AppenderRef ref="ErrorFileAppender"/>
             <AppenderRef ref="MAIN"/>
+            <AppenderRef ref="poseidon"/>
         </Root>
-        <Logger name="com.yoann.poseidon" level="INFO" additivity="true">
-            <AppenderRef ref="payMyBuddy"/>
+        <Logger name="com.yoann.poseidon" level="DEBUG" additivity="true">
+            <AppenderRef ref="poseidon"/>
         </Logger>
     </Loggers>
 </Configuration>
