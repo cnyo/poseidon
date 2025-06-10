@@ -127,7 +127,7 @@ public class RatingControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("moodysRating", "30")
-                .param("sandPRating", "30")
+                .param("sandPRating", "test")
                 .param("fitchRating", "30")
                 .param("order", "10"));
 

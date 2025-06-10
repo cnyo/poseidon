@@ -28,9 +28,9 @@
             <AppenderRef ref="CONSOLE"/>
             <AppenderRef ref="ErrorFileAppender"/>
             <AppenderRef ref="MAIN"/>
-            <AppenderRef ref="poseidon"/>
         </Root>
-        <Logger name="com.yoann.poseidon" level="DEBUG" additivity="true">
+        <Logger name="com.nnk.springboot" level="DEBUG" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
             <AppenderRef ref="poseidon"/>
         </Logger>
     </Loggers>
