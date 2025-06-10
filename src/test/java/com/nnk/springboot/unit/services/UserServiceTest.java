@@ -125,7 +125,7 @@ public class UserServiceTest {
     @Test
     public void getUserByUsername_shouldReturnUser() throws IllegalArgumentException {
         // Arrange
-        when(userRepository.findByUsername(anyString())).thenReturn(user);
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
         // Act
         DbUser result = userService.findByUsername("username");

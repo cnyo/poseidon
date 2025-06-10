@@ -1,6 +1,7 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.security.exception.NotFoundException;
 
 import java.util.List;
 
@@ -59,5 +60,5 @@ public interface UserService {
      * @return the user with the specified username
      * @throws IllegalArgumentException if the username is null or invalid
      */
-    DbUser findByUsername(String username) throws IllegalArgumentException;
+    DbUser findByUsername(String username) throws IllegalArgumentException, NotFoundException;
 }

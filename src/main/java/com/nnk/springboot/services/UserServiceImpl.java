@@ -1,7 +1,11 @@
 package com.nnk.springboot.services;
 
+import com.nnk.springboot.config.SecurityConfig;
 import com.nnk.springboot.domain.DbUser;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.security.exception.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    private final Logger log = LogManager.getLogger(SecurityConfig.class);
 
     /**
      * Retrieves all users.
@@ -113,15 +119,17 @@ public class UserServiceImpl implements UserService {
      * Finds a user by their username.
      *
      * @param username the username of the user to find
-     * @return the user with the specified username, or null if not found
+     * @return the user with the specified username
      * @throws IllegalArgumentException if the username is null or empty
      */
     @Override
-    public DbUser findByUsername(String username) throws IllegalArgumentException {
+    public DbUser findByUsername(String username) throws IllegalArgumentException, NotFoundException {
+        log.debug("Finding user by Username");
         if (username == null || username.isEmpty()) {
+            log.error("Username cannot be null or empty");
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
 
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElseThrow(NotFoundException::new);
     }
 }
