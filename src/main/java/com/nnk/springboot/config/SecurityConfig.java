@@ -39,7 +39,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.debug("Configuring security filter chain");
-        log.info("Configuring security filter chain");
 
         http
                 .formLogin(form ->

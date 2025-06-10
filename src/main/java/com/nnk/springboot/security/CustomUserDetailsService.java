@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -33,7 +34,20 @@ public class CustomUserDetailsService implements UserDetailsService {
                 dbUser.getUsername(),
                 dbUser.getPassword(),
                 dbUser.getFullname(),
-                List.of(dbUser.getRole())
+                getGrantedAuthority(dbUser.getRole())
         );
+    }
+
+    /**
+     * Converts the user's role into a list of GrantedAuthority.
+     *
+     * @param role the role of the user
+     * @return a list of GrantedAuthority
+     */
+    private List<String> getGrantedAuthority(String role) {
+        List<String> authorities = new ArrayList<>();
+        authorities.add("ROLE_" + role);
+
+        return authorities;
     }
 }

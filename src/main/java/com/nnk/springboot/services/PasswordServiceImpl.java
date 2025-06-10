@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Service
 public class PasswordServiceImpl implements PasswordService {
 
-    private final String REG_EXPRESSION = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,20}$";
+    private final String REG_EXPRESSION = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@!#$%^&+=]).{8,}$";
 
     /**
      * Validates the password against the defined regular expression.
