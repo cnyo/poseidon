@@ -3,6 +3,8 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 import com.nnk.springboot.services.LoginService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ public class CurveController {
 
     @Autowired
     private LoginService loginService;
+
+    private final Logger log = LogManager.getLogger(CurveController.class);
 
     /**
      * Displays the curve point list page with all curve points.
@@ -52,6 +56,7 @@ public class CurveController {
      */
     @GetMapping("/curvePoint/add")
     public String addCurvePointForm(CurvePoint curvePoint, Model model) {
+        log.info("Displaying add curve point form");
         model.addAttribute("curvePoint", curvePoint);
 
         return "curvePoint/add";
@@ -67,16 +72,24 @@ public class CurveController {
      */
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
+        log.info("Validating and adding curve point: {}", curvePoint);
         if (result.hasErrors()) {
+            log.info("Validation errors: {}", result.getAllErrors());
+            model.addAttribute("curvePoint", curvePoint);
+
             return "curvePoint/add";
         }
 
         try {
+            log.info("Adding curve point: {}", curvePoint);
             curvePointService.addCurvePoint(curvePoint);
 
             return "redirect:/curvePoint/list";
         } catch (Exception e) {
+            log.error("Error adding curve point: {}", e.getMessage());
             result.rejectValue("curveId", "error.curveId", "Curve ID already exists");
+            model.addAttribute("curvePoint", curvePoint);
+
             return "curvePoint/add";
         }
     }
@@ -131,7 +144,7 @@ public class CurveController {
      * @param id the ID of the curve point to delete
      * @return the name of the view to redirect to
      */
-    @DeleteMapping("/curvePoint/delete/{id}")
+    @GetMapping("/curvePoint/delete/{id}")
     public String deleteCurvePoint(@PathVariable("id") Integer id) {
         CurvePoint curvePoint = curvePointService.getCurvePoint(id);
         if (curvePoint != null) {

@@ -16,7 +16,7 @@ public class CurvePoint {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer curveId;
+    private Integer curveId = 0;
 
     private Timestamp asOfDate = new Timestamp(System.currentTimeMillis());
 

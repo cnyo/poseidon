@@ -2,6 +2,8 @@ package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ public class CurvePointServiceImpl implements CurvePointService {
 
     @Autowired
     private CurvePointRepository curvePointRepository;
+
+    private final Logger log = LogManager.getLogger(CurvePointServiceImpl.class);
 
     @Override
     public List<CurvePoint> getAllCurvePoint() {
@@ -88,9 +92,11 @@ public class CurvePointServiceImpl implements CurvePointService {
     @Override
     public CurvePoint addCurvePoint(CurvePoint curvePoint) throws IllegalArgumentException {
         if (curvePoint == null) {
+            log.error("Attempted to add a null CurvePoint");
             throw new IllegalArgumentException("CurvePoint cannot be null");
         }
 
+        log.debug("Adding a new CurvePoint");
         return curvePointRepository.save(curvePoint);
     }
 }
