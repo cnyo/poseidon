@@ -18,9 +18,16 @@
         <div class="col-6 text-right" th:insert="~{common/loginAs}"></div>
     </div>
 <h3> HOME PAGE </h3>
-<p>
-    <a href="/app/login">Login</a> or create one <a href="/user/list">User management</a>
-</p>
-</p>
+<div class="row" th:if="${#authorization.expression('isAuthenticated()')}">
+    <p>
+        Bienvenue <b th:text="${displayName}" class="user"> remoteUser </b> sur la page d'accueil de l'application Spring Boot.
+        <br>
+        Vous pouvez naviguer vers les différentes sections en utilisant les liens ci-dessus.
+    </p>
+</div>
+<div class="row" th:if="${#authorization.expression('!isAuthenticated()')}">
+    <p>
+        <a href="/app/login">Login</a> or create one <a href="/user/list">User management</a>
+    </p>
 </body>
 </html>
