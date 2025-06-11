@@ -31,6 +31,11 @@ public class HomeController
 	@RequestMapping("/")
 	public String home(Model model, Authentication authentication)
 	{
+		if(loginService.hasAdminRole(authentication)) {
+			log.info("User has admin role, redirecting to admin home page");
+			return "redirect:/admin/home";
+		}
+
 		model.addAttribute("displayName", loginService.getDisplayName(authentication));
 
 		return "home";
@@ -43,8 +48,10 @@ public class HomeController
 	 * @return a redirect to the bid list page
 	 */
 	@RequestMapping("/admin/home")
-	public String adminHome(Model model)
+	public String adminHome(Model model, Authentication authentication)
 	{
-		return "redirect:/bidList/list";
+		model.addAttribute("displayName", loginService.getDisplayName(authentication));
+
+		return "admin_home";
 	}
 }

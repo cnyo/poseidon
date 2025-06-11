@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title> Spring Boot </title>
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
@@ -13,7 +13,8 @@
             <a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
             <a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
             <a href="/trade/list">Trade</a>&nbsp;|&nbsp;
-            <a href="/ruleName/list">Rule</a>
+            <a href="/ruleName/list">Rule</a> |
+            <a href="/admin/home" sec:authorize="hasRole('ADMIN')">Espace admin</a>
         </div>
         <div class="col-6 text-right" th:insert="~{common/loginAs}"></div>
     </div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title> Spring Boot </title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../styles.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row" th:if="${#authorization.expression('isAuthenticated()')}">
+        <div class="col-6">
+            <a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
+            <a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
+            <a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
+            <a href="/trade/list">Trade</a>&nbsp;|&nbsp;
+            <a href="/ruleName/list">Rule</a> |
+            <a href="/admin/home" sec:authorize="hasRole('ADMIN')">Espace admin</a>
+        </div>
+        <div class="col-6 text-right" th:insert="~{common/loginAs}"></div>
+    </div>
+<h3> ADMIN HOME PAGE </h3>
+<div class="row" th:if="${#authorization.expression('isAuthenticated()')}">
+    <p>
+        Bienvenue <b th:text="${displayName}" class="user"> remoteUser </b>
+        sur la page d'accueil de l'espace administrateur de l'application Spring Boot.
+    </p>
+</div>
+<div class="row" th:if="${#authorization.expression('!isAuthenticated()')}">
+    <p>
+        <a href="/app/login">Login</a> or create one <a href="/user/list">User management</a>
+    </p>
+</body>
+</html>

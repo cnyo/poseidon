@@ -1,6 +1,7 @@
 package com.nnk.springboot.security;
 
 import com.nnk.springboot.domain.DbUser;
+import com.nnk.springboot.security.exception.ApplicationAuthenticationException;
 import com.nnk.springboot.security.user.AuthUser;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -27,15 +28,27 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("loadUserByUsername");
-        DbUser dbUser = userService.findByUsername(username);
+        try {
+            log.info("Loading user by username: {}", username);
+            DbUser dbUser = userService.findByUsername(username);
 
-        return new AuthUser(
-                dbUser.getId(),
-                dbUser.getUsername(),
-                dbUser.getPassword(),
-                dbUser.getFullname(),
-                getGrantedAuthority(dbUser.getRole())
-        );
+            if (dbUser == null) {
+                log.error("User not found with username: {}", username);
+                throw new ApplicationAuthenticationException("User not found with username");
+            }
+
+            return new AuthUser(
+                    dbUser.getId(),
+                    dbUser.getUsername(),
+                    dbUser.getPassword(),
+                    dbUser.getFullname(),
+                    getGrantedAuthority(dbUser.getRole())
+            );
+        } catch (Exception e) {
+            log.error("Error loading user by username: {}", username, e);
+            throw new ApplicationAuthenticationException("User not found with username");
+        }
+
     }
 
     /**
@@ -45,6 +58,12 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @return a list of GrantedAuthority
      */
     private List<String> getGrantedAuthority(String role) {
+        if (role == null || role.isEmpty()) {
+            log.warn("Role is null or empty, returning empty authorities list");
+            return new ArrayList<>();
+        }
+
+        log.debug("getGrantedAuthority for role: {}", role);
         List<String> authorities = new ArrayList<>();
         authorities.add("ROLE_" + role);
 

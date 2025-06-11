@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
                         .stream(repository.spliterator(), false)
                         .collect(Collectors.toList());
             } else {
-                log.debug("ClientRegistrationRepository is not iterable");
+                log.error("ClientRegistrationRepository is not iterable");
                 throw new IllegalStateException("ClientRegistrationRepository is not iterable");
             }
         }
@@ -72,7 +72,6 @@ public class LoginServiceImpl implements LoginService {
         clientRegistrations.forEach(registration -> oauth2AuthenticationUrls.put(registration.getClientName(), "/" + AUTORIZATION_REQUEST_BASE_URI + "/" + registration.getRegistrationId()));
 
         log.debug("Returning {} oauth2 authentication urls", oauth2AuthenticationUrls.size());
-
         return oauth2AuthenticationUrls;
     }
 
@@ -133,5 +132,17 @@ public class LoginServiceImpl implements LoginService {
         }
 
         return DEFAULT_DISPLAY_USERNAME;
+    }
+
+    @Override
+    public boolean hasAdminRole(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.debug("Authentication object is null or not authenticated, returning false for admin role");
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
     }
 }

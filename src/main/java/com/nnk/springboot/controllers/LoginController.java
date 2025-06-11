@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -38,19 +39,26 @@ public class LoginController {
      * @return ModelAndView object containing the login page or redirect to home
      */
     @GetMapping("login")
-    public ModelAndView login(Authentication authentication) {
+    public ModelAndView login(
+            @RequestParam(value="error", required = false) String error,
+            Authentication authentication
+    ) {
         if (!loginService.isAnonymousAuthentication(authentication)) {
             log.info("User is already authenticated, redirecting to home page");
             return new ModelAndView("redirect:/");
         }
 
-        log.info("Get login page");
         ModelAndView mav = new ModelAndView();
+
+        if (error != null) {
+            log.error("Login error occurred: {}", error);
+            mav.addObject("loginError", true);
+        }
+
         Map<String, String> oauth2AuthenticationUrls = loginService.getOauth2AuthenticationUrls();
         mav.addObject("urls", oauth2AuthenticationUrls);
         mav.addObject("user", new DbUser());
         mav.setViewName("login");
-        log.info(mav.getViewName());
 
         return mav;
     }
@@ -67,7 +75,7 @@ public class LoginController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("users", userService.getAllUser());
         mav.setViewName("user/list");
-        log.info(mav.getViewName());
+        log.info("User articles page view name: {}", mav.getViewName());
 
         return mav;
     }
@@ -85,7 +93,7 @@ public class LoginController {
         String errorMessage= "You are not authorized for the requested data.";
         mav.addObject("errorMsg", errorMessage);
         mav.setViewName("403");
-        log.info(mav.getViewName());
+        log.info("Error message: {}", errorMessage);
 
         return mav;
     }

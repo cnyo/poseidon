@@ -33,4 +33,12 @@ public interface LoginService {
      * @return the display name, which could be the username or a default value if not available.
      */
     String getDisplayName(Authentication authentication);
+
+    /**
+     * Checks if the user associated with the given authentication has an admin role.
+     *
+     * @param authentication the authentication object to check.
+     * @return true if the user has an admin role, false otherwise.
+     */
+    boolean hasAdminRole(Authentication authentication);
 }

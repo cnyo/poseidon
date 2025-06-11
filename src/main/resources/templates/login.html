@@ -17,6 +17,9 @@
     </div>
     <div class="row"><h3>Login Screen</h3></div>
     <div class="row">
+        <div th:if="${loginError}" class="alert alert-danger" role="alert">
+            <strong>Login failed!</strong> Please check your username and password.
+        </div>
         <form action="#" th:action="@{/app/login}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
             <div class="form-group">
                 <label for="username" class="col-sm-2 control-label">User Name</label>

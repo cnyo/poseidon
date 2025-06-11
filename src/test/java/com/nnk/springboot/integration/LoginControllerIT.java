@@ -26,36 +26,34 @@ public class LoginControllerIT {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
+    public void shouldReturnLoginPage() throws Exception {
         mockMvc.perform(get("/app/login"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void userLoginTest() throws Exception {
+    public void userLoginTest_redirectedToHomePage() throws Exception {
+        // Perform a login request with valid credentials
         mockMvc.perform(formLogin("/app/login")
-                .user("user")
-                .password("user")
-        ).andExpect(authenticated());
-    }
-
-    @Test
-    public void userLoginTest_redirectedToHome() throws Exception {
-        mockMvc.perform(formLogin("/app/login")
-                .user("user")
-                .password("user"))
+                .user("admin")
+                .password("admin")
+            )
+            .andDo(print())
             .andExpect(authenticated())
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/"));
+
     }
 
     @Test
     public void userLoginFailed() throws Exception {
         mockMvc.perform(formLogin("/app/login")
-                .user("false")
+                .user("admin")
                 .password("user")
-        ).andExpect(unauthenticated());
+            )
+            .andDo(print())
+            .andExpect(unauthenticated());
     }
 
     @Test

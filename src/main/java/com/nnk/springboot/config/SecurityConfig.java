@@ -51,9 +51,10 @@ public class SecurityConfig {
                                 .permitAll()) // Ensure OAuth2 login is accessible to all
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(matcher -> matcher
-                        .requestMatchers("/", "/app/error", "/user/list", "/css/**", "/js/**").permitAll() // Allow public access to these resources
+                        .requestMatchers("/css/**", "/js/**").permitAll() // Allow public access to static resources
+                        .requestMatchers("/", "/app/error", "/user/list", "/user/add", "/user/update/**", "/user/validate", "/user/delete/**").permitAll() // Allow public access to the home page, error page, user list, and user deletion
                         .requestMatchers("/app/login").anonymous() // Allow anonymous access to the login page
-                        .requestMatchers("/admin/home", "/app/admin/**").hasRole("ADMIN") // Restrict access to admin pages
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict access to admin pages
                         .anyRequest().authenticated() // Require authentication for all other requests
                 )
                 .csrf(Customizer.withDefaults()); // Enable CSRF protection with default settings
