@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.sql.Timestamp;
@@ -22,7 +23,8 @@ public class Trade {
     @Length(max = 125)
     private String type;
 
-    private Double buyQuantity = 0d;
+    @NotNull(message = "Buy quantity is mandatory")
+    private Double buyQuantity;
 
     private Double sellQuantity = 0d;
 

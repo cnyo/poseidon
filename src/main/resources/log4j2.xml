@@ -7,7 +7,7 @@
     <Appenders>
         <Console name="CONSOLE">
             <PatternLayout disableAnsi="false"
-                           pattern="%d{DEFAULT} [%t] %highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=blue} - %msg%n"/>
+                           pattern="%d{DEFAULT} [%t] %highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=blue} - %logger{36} : %msg%n"/>
         </Console>
         <File name="ErrorFileAppender" fileName="logs/poseidon/error.log">
             <PatternLayout pattern="%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"/>
@@ -16,7 +16,7 @@
             </Filters>
         </File>
         <File name="MAIN" fileName="logs/poseidon/main.log">
-            <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level  - %msg%n"/>
         </File>
         <File name="poseidon" fileName="logs/poseidon/poseidon.log">
             <PatternLayout disableAnsi="false" pattern="%d{DEFAULT} [%t] %-5level %logger{36} - %msg%n"/>
