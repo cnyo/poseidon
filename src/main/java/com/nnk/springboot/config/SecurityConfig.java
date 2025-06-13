@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(matcher -> matcher
                         .requestMatchers("/css/**", "/js/**").permitAll() // Allow public access to static resources
-                        .requestMatchers("/", "/app/error", "/user/list", "/user/add", "/user/update/**", "/user/validate", "/user/delete/**").permitAll() // Allow public access to the home page, error page, user list, and user deletion
+                        .requestMatchers("/", "/app/error", "/user/**").permitAll() // Allow public access to the home page, error page, and user-related pages
                         .requestMatchers("/app/login").anonymous() // Allow anonymous access to the login page
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict access to admin pages
                         .anyRequest().authenticated() // Require authentication for all other requests

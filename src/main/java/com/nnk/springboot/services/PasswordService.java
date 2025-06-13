@@ -13,4 +13,12 @@ public interface PasswordService {
      * @return true if the password is valid, false otherwise
      */
     Boolean isValidPassword(String password);
+
+    /**
+     * Encodes the password using a secure hashing algorithm.
+     *
+     * @param password the password to encode
+     * @return the encoded password
+     */
+    String encodePassword(String password) throws IllegalArgumentException;
 }

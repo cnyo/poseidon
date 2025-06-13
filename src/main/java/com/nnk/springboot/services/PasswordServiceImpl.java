@@ -1,5 +1,6 @@
 package com.nnk.springboot.services;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -30,5 +31,20 @@ public class PasswordServiceImpl implements PasswordService {
         Matcher matcher = pattern.matcher(password);
 
         return matcher.matches();
+    }
+
+    @Override
+    public String encodePassword(String password) throws IllegalArgumentException {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (!isValidPassword(password)) {
+            throw new IllegalArgumentException("Invalid password format: " + password);
+        }
+
+        return encoder.encode(password);
     }
 }
