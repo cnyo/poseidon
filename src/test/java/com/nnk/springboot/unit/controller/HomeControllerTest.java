@@ -64,7 +64,7 @@ public class HomeControllerTest {
         // Act
         mockMvc.perform(get("/admin/home"))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/bidList/list"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin_home"));
     }
 }

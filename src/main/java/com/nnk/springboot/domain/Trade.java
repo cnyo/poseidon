@@ -73,9 +73,10 @@ public class Trade {
 
     public Trade() {}
 
-    public Trade(String account, String type) {
+    public Trade(String account, String type, Double buyQuantity) {
         setAccount(account);
         setType(type);
+        setBuyQuantity(buyQuantity);
     }
 
     public void setId(Integer id) {

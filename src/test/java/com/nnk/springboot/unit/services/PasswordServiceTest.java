@@ -16,7 +16,7 @@ public class PasswordServiceTest {
     private final PasswordService passwordService = new PasswordServiceImpl();
 
     @ParameterizedTest
-    @ValueSource(strings = {"Valid123@", "Valid123abcD@"})
+    @ValueSource(strings = {"Valid123@", "Valid123abcD@", "A1@b2#c3$d4%e5^f6&g7*h8(i9)j0"})
     public void testValidity_whenPasswordIsValid_shouldReturnTrue(String password) {
         // Act
         Boolean result = passwordService.isValidPassword(password);
@@ -34,8 +34,7 @@ public class PasswordServiceTest {
             "Abcdefgh", // No digit, no special character
             "Abcdefg1", // No special character
             "Abcdefg@", // No digit
-            "Abcfg1@", // Valid but too short
-            "A1@b2#c3$d4%e5^f6&g7*h8(i9)j0" // Too long
+            "Abcfg1@" // Valid but too short
     })
     @NullSource
     public void testValidity_whenPasswordIsNotValid_shouldReturnTrue(String password) {

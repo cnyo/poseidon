@@ -33,7 +33,7 @@ public class TradeServiceTest {
 
     @BeforeEach
     public void setUp() {
-        trade = new Trade("Trade Account", "Type");
+        trade = new Trade("Trade Account", "Type", 1D);
         trade.setId(1);
     }
 
