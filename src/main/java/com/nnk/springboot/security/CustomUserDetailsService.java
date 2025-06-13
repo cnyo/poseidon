@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.debug("loadUserByUsername");
         try {
             log.info("Loading user by username: {}", username);
-            DbUser dbUser = userService.findByUsername(username);
+            DbUser dbUser = userService.getUserByUsername(username);
 
             if (dbUser == null) {
                 log.error("User not found with username: {}", username);
