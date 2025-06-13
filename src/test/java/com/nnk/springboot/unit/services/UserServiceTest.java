@@ -128,7 +128,7 @@ public class UserServiceTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
         // Act
-        DbUser result = userService.findByUsername("username");
+        DbUser result = userService.getUserByUsername("username");
 
         // Assert
         Assertions.assertNotNull(result);

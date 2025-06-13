@@ -116,20 +116,20 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Finds a user by their username.
+     * Retrieves a user by their username.
      *
-     * @param username the username of the user to find
-     * @return the user with the specified username
+     * @param username the username of the user to retrieve
+     * @return the user with the specified username, or null if not found
      * @throws IllegalArgumentException if the username is null or empty
      */
     @Override
-    public DbUser findByUsername(String username) throws IllegalArgumentException, NotFoundException {
+    public DbUser getUserByUsername(String username) throws IllegalArgumentException {
         log.debug("Finding user by Username");
         if (username == null || username.isEmpty()) {
             log.error("Username cannot be null or empty");
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
 
-        return userRepository.findByUsername(username).orElseThrow(NotFoundException::new);
+        return userRepository.findByUsername(username).orElse(null);
     }
 }

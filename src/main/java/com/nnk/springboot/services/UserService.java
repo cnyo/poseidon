@@ -54,11 +54,11 @@ public interface UserService {
     void deleteUser(Integer id) throws IllegalArgumentException;
 
     /**
-     * Finds a user by their username.
+     * Retrieves a user by their username.
      *
-     * @param username the username of the user to find
+     * @param username the username of the user to retrieve
      * @return the user with the specified username
-     * @throws IllegalArgumentException if the username is null or invalid
+     * @throws IllegalArgumentException if the username is null or empty
      */
-    DbUser findByUsername(String username) throws IllegalArgumentException, NotFoundException;
+    DbUser getUserByUsername(String username) throws IllegalArgumentException;
 }

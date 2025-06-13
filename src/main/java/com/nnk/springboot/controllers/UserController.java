@@ -71,13 +71,25 @@ public class UserController {
             result.rejectValue("password", "error.user", INVALID_PASSWORD_MESSAGE);
         }
 
-        if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            userService.saveUser(user);
-            model.addAttribute("users", userService.getAllUser());
-            return "redirect:/user/list";
+        if (userService.getUserByUsername(user.getUsername()) != null) {
+            result.rejectValue("username", "error.user", "Username already exists");
         }
+
+        if (!result.hasErrors()) {
+            try {
+
+                    user.setPassword(passwordService.encodePassword(user.getPassword()));
+                    userService.saveUser(user);
+                    model.addAttribute("users", userService.getAllUser());
+
+                    log.info("User {} added successfully", user.getUsername());
+                    return "redirect:/user/list";
+
+            } catch (Exception e) {
+                log.error("Error checking username uniqueness: {}", e.getMessage());
+            }
+        }
+
         return "user/add";
     }
 
