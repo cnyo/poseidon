@@ -26,8 +26,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ApplicationAuthenticationException {
         log.debug("loadUserByUsername");
+        if (username == null || username.isEmpty()) {
+            log.error("Username is null or empty");
+            throw new ApplicationAuthenticationException("Username is null or empty");
+        }
+
         try {
             log.info("Loading user by username: {}", username);
             DbUser dbUser = userService.getUserByUsername(username);

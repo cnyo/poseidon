@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -143,4 +144,11 @@ public class BidListServiceTest {
         // Assert
         verify(bidListRepository, times(1)).deleteById(bidList.getId());
     }
+
+    @Test
+    public void deleteBidList_whenBidListIsNull_shouldThrowException() throws IllegalArgumentException {
+        // Act & Assert
+        assertThatThrownBy(() -> bidListService.deleteBid(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("BidList ID cannot be null");    }
 }

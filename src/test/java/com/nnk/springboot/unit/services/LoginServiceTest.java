@@ -1,6 +1,5 @@
 package com.nnk.springboot.unit.services;
 
-import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.LoginServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,8 +8,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -32,7 +36,6 @@ public class LoginServiceTest {
 
     @InjectMocks
     private LoginServiceImpl loginService;
-
 
     @Test
     public void getIsAnonymousAuthentication_whenAuthenticatedAndIsAnonymous_returnTrue() throws IllegalArgumentException {
@@ -151,5 +154,88 @@ public class LoginServiceTest {
 
         // Assert
         assertThat(result).isEqualTo("remoteUser");
+    }
+
+    @Test
+    public void getDisplayName_whenIsAuthenticatedWithOAuth2AndNameIsNull_shouldReturnDefaultUsername() {
+        // Arrange
+        OAuth2User principal = mock(OAuth2User.class);
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getPrincipal()).thenReturn(principal);
+        when(principal.getAttribute(anyString())).thenReturn(null);
+
+        // Act
+        String result = loginService.getDisplayName(authentication);
+
+        // Assert
+        assertThat(result).isEqualTo("remoteUser");
+    }
+
+    @Test
+    public void getDisplayName_whenIsAuthenticatedWithSessionAndUsernameIsNull_shouldReturnDefaultUsername() {
+        // Arrange
+        UserDetails principal = mock(UserDetails.class);
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getPrincipal()).thenReturn(principal);
+        when(principal.getUsername()).thenReturn(null);
+
+        // Act
+        String result = loginService.getDisplayName(authentication);
+
+        // Assert
+        assertThat(result).isEqualTo("remoteUser");
+    }
+
+    @Test
+    public void verifyHasAdminRole_whenUserIsAuthenticatedAndAdmin_shouldReturnTrue() {
+        // Arrange
+        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getAuthorities()).thenReturn((Collection) authorities);
+
+        // Act
+        boolean result = loginService.hasAdminRole(authentication);
+
+        // Assert
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void verifyHasAdminRole_whenUserIsAuthenticatedAndNotAdmiin_shouldReturnFalse() {
+        // Arrange
+        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getAuthorities()).thenReturn((Collection) authorities);
+
+        // Act
+        boolean result = loginService.hasAdminRole(authentication);
+
+        // Assert
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void verifyHasAdminRole_whenUserIsNotAuthenticated_shouldReturnTrue() {
+        // Arrange
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        // Act
+        boolean result = loginService.hasAdminRole(authentication);
+
+        // Assert
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void verifyHasAdminRole_whenAuthenticationIsNull_shouldReturnTrue() {
+        // Act
+        boolean result = loginService.hasAdminRole(null);
+
+        // Assert
+        assertThat(result).isFalse();
     }
 }
