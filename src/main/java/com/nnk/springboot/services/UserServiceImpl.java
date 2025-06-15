@@ -3,7 +3,6 @@ package com.nnk.springboot.services;
 import com.nnk.springboot.config.SecurityConfig;
 import com.nnk.springboot.domain.DbUser;
 import com.nnk.springboot.repositories.UserRepository;
-import com.nnk.springboot.security.exception.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

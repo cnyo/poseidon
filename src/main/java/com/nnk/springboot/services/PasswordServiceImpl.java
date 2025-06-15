@@ -33,6 +33,14 @@ public class PasswordServiceImpl implements PasswordService {
         return matcher.matches();
     }
 
+    /**
+     * Encodes the password using BCrypt.
+     * Throws IllegalArgumentException if the password is null, empty, or does not meet the validation criteria.
+     *
+     * @param password the password to encode
+     * @return the encoded password
+     * @throws IllegalArgumentException if the password is null, empty, or invalid
+     */
     @Override
     public String encodePassword(String password) throws IllegalArgumentException {
         if (password == null || password.isEmpty()) {

@@ -8,12 +8,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom UserDetailsService implementation for loading user details by username.
+ * This service retrieves user information from the UserService and converts it into a UserDetails object.
+ */
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -25,6 +28,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
+    /**
+     * Loads user details by username.
+     * If the username is null or empty, throws an ApplicationAuthenticationException.
+     * If the user is not found, throws an ApplicationAuthenticationException.
+     *
+     * @param username the username of the user to load
+     * @return UserDetails object containing user information
+     * @throws ApplicationAuthenticationException if the username is null, empty, or user not found
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws ApplicationAuthenticationException {
         log.debug("loadUserByUsername");

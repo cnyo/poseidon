@@ -40,17 +40,6 @@ public record AuthUser(
         return username;
     }
 
-    @Override
-    /**
-     * Returns the password of the user.
-     * This method is used for authentication purposes.
-     *
-     * @return the password of the user
-     */
-    public String getPassword() {
-        return password;
-    }
-
     /**
      * Returns the attributes of the user.
      * In this implementation, it returns an empty map as no additional attributes are provided.
@@ -60,6 +49,17 @@ public record AuthUser(
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of();
+    }
+
+    @Override
+    /**
+     * Returns the password of the user.
+     * This method is used for authentication purposes.
+     *
+     * @return the password of the user
+     */
+    public String getPassword() {
+        return password;
     }
 
     /**

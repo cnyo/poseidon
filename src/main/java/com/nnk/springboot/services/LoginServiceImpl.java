@@ -134,6 +134,12 @@ public class LoginServiceImpl implements LoginService {
         return DEFAULT_DISPLAY_USERNAME;
     }
 
+    /**
+     * Checks if the user has an admin role.
+     *
+     * @param authentication the authentication object to check for admin role.
+     * @return true if the user has the admin role, false otherwise.
+     */
     @Override
     public boolean hasAdminRole(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

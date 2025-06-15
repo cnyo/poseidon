@@ -30,7 +30,7 @@ public class SecurityConfig {
     /**
      * Configures the security filter chain for the application.
      * This method sets up form login, OAuth2 login, user details service,
-     * and authorization rules for different endpoints.
+     * and authorization rules for different URL patterns.
      *
      * @param http the HttpSecurity object to configure
      * @return the configured SecurityFilterChain

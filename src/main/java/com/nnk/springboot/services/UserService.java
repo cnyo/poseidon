@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.DbUser;
-import com.nnk.springboot.security.exception.NotFoundException;
 
 import java.util.List;
 
